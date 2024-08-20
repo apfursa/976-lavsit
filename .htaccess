@@ -1,0 +1,27 @@
+Options +FollowSymLinks
+IndexIgnore */*
+RewriteEngine on
+
+#SetEnvIf X-Forwarded-Proto https SERVER_PORT=443
+#SetEnvIf X-Forwarded-Proto https HTTPS=on
+#RewriteCond %{HTTP:HTTPS} !=on [NC]
+#RewriteRule ^(.*)$ https://%{SERVER_NAME}%{REQUEST_URI} [R=301,L]
+
+RewriteCond %{REQUEST_URI} !^/(web)
+RewriteRule ^assets/(.*)$ /web/assets/$1 [L]
+RewriteRule ^css/(.*)$ web/css/$1 [L]
+RewriteRule ^js/(.*)$ web/js/$1 [L]
+RewriteRule ^img/(.*)$ web/img/$1 [L]
+RewriteRule ^upload/(.*)$ web/upload/$1 [L]
+
+RewriteRule ^react/(.*)$ web/react/$1 [L]
+RewriteRule ^static/(.*)$ web/static/$1 [L]
+RewriteRule ^placements/(.*)$ web/placements/$1 [L]
+RewriteRule ^favicon\.ico$ web/favicon.ico [L]
+RewriteRule ^robots\.txt$ web/robots.txt [L]
+
+RewriteRule (.*) /web/$1
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /web/index.php

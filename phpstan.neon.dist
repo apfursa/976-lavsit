@@ -1,0 +1,14 @@
+includes:
+	- vendor/proget-hq/phpstan-yii2/extension.neon
+parameters:
+    level: 0
+    paths:
+        - controllers
+        - models
+    bootstrapFiles:
+        - vendor/yiisoft/yii2/Yii.php
+    yii2:
+            config_path: config/web.php
+    ignoreErrors:
+            - '#Access to an undefined property wm\\admin\\models\\synchronization[a-zA-Z0-9\\_::$.]+#'
+    reportUnmatchedIgnoredErrors: false
