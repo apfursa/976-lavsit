@@ -1,17 +1,21 @@
 <?php
 
-namespace app\controllers;
+namespace app\controllers\productManagement;
 
 use app\models\productManagement\Master;
+use app\models\productManagement\WorkingHours;
+use app\models\productManagement\Workplace;
 use Yii;
 use yii\filters\AccessControl;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
 
-class MasterController extends Controller
+// Рабочее время
+class WorkingHoursController extends Controller
 {
 
     /**
@@ -113,6 +117,33 @@ class MasterController extends Controller
 
     public function actionStart($continue = false)
     {
+        $usersId = Yii::$app->user->id;
+        $master = $this->getMasterByUserId($usersId);
+        $typeOfCompletion = WorkingHours::howWorkingDayCompleted($master);
+        if ($typeOfCompletion == 'completed automatically') {
+            Yii::$app->response->redirect(Url::to('productManagement/master/start'));
+        }
+        if (
+            $typeOfCompletion == 'no entry' ||
+            $typeOfCompletion == 'completed by the user' ||
+            $typeOfCompletion == 'fixed by user'
+        ) {
+            WorkingHours::add($master);
+//            if(){
+//                WorkingHours::add($master);
+//            }else{
+//                return $this->render(
+//                    'main',
+//                    [
+//                        'product_name' => $arrData['product_name'],
+//                        'product_id' => $arrData['product_id'],
+//                        'master_id' => $arrData['master_id'],
+//                    ]
+//                );
+//            }
+        }
+
+
         $model = new Master();
         $arrData = $model->start($continue);
         Yii::warning($arrData, 'MasterController_Start_$arrData_112');
@@ -161,67 +192,43 @@ class MasterController extends Controller
         }
     }
 
+
+    public function getMasterByUserId($usersId)
+    {
+        $component = new \wm\b24tools\b24Tools();
+        $b24App = $component->connectFromAdmin();
+        $obB24 = new \Bitrix24\B24Object($b24App);
+        $answerB24 = $obB24->client->call(
+            'crm.item.list',
+            [
+                'entityTypeId' => 1036, // СП Мастер
+                'filter' => ['ufCrm14Userid' => $usersId]
+            ]
+        );
+        $master = $answerB24['result']['items'][0];
+        return $master;
+    }
+
+    public function actionChangeEndTimeOfWorkingDay()
+    {
+        $usersId = Yii::$app->user->id;
+        $master = $this->getMasterByUserId($usersId);
+        return $this->render(
+            'changeEndTimeOfWorkingDay',
+            [
+//                'product_name' => $arrData['product_name'],
+//                'product_id' => $arrData['product_id'],
+//                'master_id' => $arrData['master_id'],
+            ]
+        );
+    }
+
     public function actionEndWorkingDay($product_id = null, $master_id = null)
     {
-        Yii::warning($product_id, 'actionEndWorkingDay_$product_id');
-        Yii::warning($master_id, 'actionEndWorkingDay_$master_id');
-        $model = new Master();
-        $model->endWorkingDay($product_id, $master_id);
+//        Yii::warning($product_id, 'actionEndWorkingDay_$product_id');
+//        Yii::warning($master_id, 'actionEndWorkingDay_$master_id');
+        WorkingHours::endWorkingDay($product_id, $master_id);
         Yii::$app->user->logout();
         return $this->goHome();
-    }
-
-    public function actionReturnProduct($product_id)
-    {
-        $model = new Master();
-        $arrData = $model->returnProduct($product_id);
-        return $this->render('start1',
-            [
-                'master_id' => $arrData['master_id'],
-            ]
-        );
-//        if($arrData['page'] == 4){
-//            return $this->render('start3');
-//        }
-//        if($arrData['page'] == 7){
-//            return $this->render('start7');
-//        }
-//        Yii::$app->user->logout();
-//        return $this->goHome();
-    }
-
-    public function actionTechnologicalPauseStart($product_id)
-    {
-        $model = new Master();
-        $arrData = $model->technologicalPauseStart($product_id);
-        return $this->render('technologicalPause',
-            [
-                'product_name' => $arrData['product_name'],
-                'product_id' => $arrData['product_id'],
-            ]
-        );
-    }
-
-    public function actionTechnologicalPauseEnd($product_id)
-    {
-        $model = new Master();
-        $arrData = $model->technologicalPauseEnd($product_id);
-        return $this->render('main',
-            [
-                'product_name' => $arrData['product_name'],
-                'product_id' => $arrData['product_id'],
-            ]
-        );
-    }
-
-    public function actionDone($product_id)
-    {
-        $model = new Master();
-        $arrData = $model->done($product_id);
-        return $this->render('start1',
-            [
-                'master_id' => $arrData['master_id'],
-            ]
-        );
     }
 }

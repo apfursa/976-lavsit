@@ -35,216 +35,120 @@ class Master extends Model
         $otvet = $this->uchetRabochegoVremeny($master, $continue);
 
         if ($otvet == 'ok') {
-            $component = new \wm\b24tools\b24Tools();
-            $b24App = $component->connectFromAdmin();
-            $obB24 = new \Bitrix24\B24Object($b24App);
-            $answerB24 = $obB24->client->call(
-                'crm.item.list',
-                [
-                    'entityTypeId' => 187, //СП Производство
-                    'order' => ['id' => 'ASC'], // сортировать по возрастанию
-                    'filter' => [
-                        'ufCrm8Master' => $masterId,
-                        'ufCrm8Status' => 898 // в работе
-                    ]
-                ]
-            );
-            $arrProduct = $answerB24['result']['items'];
-            if (count($arrProduct) > 1) {
+            $productFilter = [
+                'ufCrm8Master' => $masterId,
+                'ufCrm8Status' => 898 // в работе
+            ];
+            $productOrder = [
+                'id' => 'ASC', // сортировать по возрастанию
+            ];
+            $products = Product::list($productFilter, $productOrder);
+            if (count($products) > 1) {
                 return [
                     'page' => 3
                 ];
             }
-            if (count($arrProduct) == 1) {
-                $component = new \wm\b24tools\b24Tools();
-                $b24App = $component->connectFromAdmin();
-                $obB24 = new \Bitrix24\B24Object($b24App);
-                $history = $obB24->client->call(
-                    'crm.item.add',
-                    [
-                        'entityTypeId' => 1042, // СП История изделия
-                        'fields' => [
-                            'ufCrm16Master' => $masterId,
-                            'ufCrm16Status' => 882, // в работе
-                            'ufCrm16Srochnost' => $arrProduct[0]['ufCrm8_1705585967731'], // срочность
-                            'ufCrm16Product' => $arrProduct[0]['id'],
-                            'ufCrm16Operation' => 922, // взял в работу
-                            'ufCrm16Uchastok' => $masterWorkshop // участок
-                        ]
-                    ]
-                );
+            if (count($products) == 1) {
+                $product = $products[0];
+                $historyFields = [
+                    'ufCrm16Master' => $masterId,
+                    'ufCrm16Status' => 882, // в работе
+                    'ufCrm16Srochnost' => $product->getHistoryPriorityId(), // срочность
+                    'ufCrm16Product' => $product->id,
+                    'ufCrm16Operation' => 922, // взял в работу
+                    'ufCrm16Uchastok' => $masterWorkshop // участок
+                ];
+                HistoryProduct::add($historyFields);
                 return [
-                    'page' => 2,
-                    'product_name' => $arrProduct[0]['title'],
-                    'product_id' => $arrProduct[0]['id'],
-                    'master_id' => $arrProduct[0]['ufCrm8Master'],
+                    'page' => 'main',
+                    'product_name' => $product->title,
+                    'product_id' => $product->id,
+//                    'master_id' => $product->masterId,
 
                 ];
             }
-            if ($arrProduct == []) {
-                $component = new \wm\b24tools\b24Tools();
-                $b24App = $component->connectFromAdmin();
-                $obB24 = new \Bitrix24\B24Object($b24App);
-                $answerB24 = $obB24->client->call(
-                    'crm.item.list',
-                    [
-                        'entityTypeId' => 187, //СП Производство
-                        'order' => [
-                            'ufCrm8_1701952418411' => 'ASC' // Дата готовности
-                        ],
-                        'filter' => [
-                            'ufCrm8_1705585967731' => 766, // Срочность ***
-                            'ufCrm8Master' => $masterId,
-                            'ufCrm8Status' => 900, // в очереди
-                        ]
-                    ]
-                );
+            $productOrder = [
+                'ufCrm8_1701952418411' => 'ASC', // сортировать по возрастанию
+            ];
+            if ($products == []) {
+                $productFilter = [
+                    'ufCrm8_1705585967731' => 766, // Срочность ***
+                    'ufCrm8Master' => $masterId,
+                    'ufCrm8Status' => 900, // в очереди
+                ];
+                $products = Product::list($productFilter, $productOrder);
             }
-            if ($answerB24['result']['items'] == []) {
-                $component = new \wm\b24tools\b24Tools();
-                $b24App = $component->connectFromAdmin();
-                $obB24 = new \Bitrix24\B24Object($b24App);
-                $answerB24 = $obB24->client->call(
-                    'crm.item.list',
-                    [
-                        'entityTypeId' => 187, //СП Производство
-                        'order' => [
-                            'ufCrm8_1701952418411' => 'ASC' // Дата готовности
-                        ],
-                        'filter' => [
-                            'ufCrm8_1705585967731' => 764, // Срочность **
-                            'ufCrm8Master' => $masterId,
-                            'ufCrm8Status' => 900, // в очереди
-                        ]
-                    ]
-                );
+            if ($products == []) {
+                $productFilter = [
+                    'ufCrm8_1705585967731' => 764, // Срочность **
+                    'ufCrm8Master' => $masterId,
+                    'ufCrm8Status' => 900, // в очереди
+                ];
+                $products = Product::list($productFilter, $productOrder);
             }
-            if ($answerB24['result']['items'] == []) {
-                $component = new \wm\b24tools\b24Tools();
-                $b24App = $component->connectFromAdmin();
-                $obB24 = new \Bitrix24\B24Object($b24App);
-                $answerB24 = $obB24->client->call(
-                    'crm.item.list',
-                    [
-                        'entityTypeId' => 187, //СП Производство
-                        'order' => [
-                            'ufCrm8_1701952418411' => 'ASC' // Дата готовности
-                        ],
-                        'filter' => [
-                            'ufCrm8_1705585967731' => 754, // Срочность *
-                            'ufCrm8Master' => $masterId,
-                            'ufCrm8Status' => 900, // в очереди
-                        ]
-                    ]
-                );
+            if ($products == []) {
+                $productFilter = [
+                    'ufCrm8_1705585967731' => 754, // Срочность *
+                    'ufCrm8Master' => $masterId,
+                    'ufCrm8Status' => 900, // в очереди
+                ];
+                $products = Product::list($productFilter, $productOrder);
             }
             $query = (new \yii\db\Query())->select(['stageId'])->from('workshop')->where(['masterWorkshop' => $masterWorkshop]);
             $data = $query->one();
             $stageId = $data['stageId'];
             Yii::warning($data, '$data');
-            if ($answerB24['result']['items'] == []) {
-                $component = new \wm\b24tools\b24Tools();
-                $b24App = $component->connectFromAdmin();
-                $obB24 = new \Bitrix24\B24Object($b24App);
-                $answerB24 = $obB24->client->call(
-                    'crm.item.list',
-                    [
-                        'entityTypeId' => 187, //СП Производство
-                        'order' => [
-                            'ufCrm8_1701952418411' => 'ASC' // Дата готовности
-                        ],
-                        'filter' => [
-                            'ufCrm8_1705585967731' => 766, // Срочность ***
-                            'ufCrm8Status' => 896, // на складе
-                            'stageId' => $stageId, // стадия/участок
-                        ]
-                    ]
-                );
+            if ($products == []) {
+                $productFilter = [
+                    'ufCrm8_1705585967731' => 766, // Срочность ***
+                    'ufCrm8Status' => 896, // на складе
+                    'stageId' => $stageId, // стадия/участок
+                ];
+                $products = Product::list($productFilter, $productOrder);
             }
-            if ($answerB24['result']['items'] == []) {
-                $component = new \wm\b24tools\b24Tools();
-                $b24App = $component->connectFromAdmin();
-                $obB24 = new \Bitrix24\B24Object($b24App);
-                $answerB24 = $obB24->client->call(
-                    'crm.item.list',
-                    [
-                        'entityTypeId' => 187, //СП Производство
-                        'order' => [
-                            'ufCrm8_1701952418411' => 'ASC' // Дата готовности
-                        ],
-                        'filter' => [
-                            'ufCrm8_1705585967731' => 764, // Срочность **
-                            'ufCrm8Status' => 896, // на складе
-                            'stageId' => $stageId, // стадия/участок
-                        ]
-                    ]
-                );
+            if ($products == []) {
+                $productFilter = [
+                    'ufCrm8_1705585967731' => 764, // Срочность **
+                    'ufCrm8Status' => 896, // на складе
+                    'stageId' => $stageId, // стадия/участок
+                ];
+                $products = Product::list($productFilter, $productOrder);
             }
-            if ($answerB24['result']['items'] == []) {
-                $component = new \wm\b24tools\b24Tools();
-                $b24App = $component->connectFromAdmin();
-                $obB24 = new \Bitrix24\B24Object($b24App);
-                $answerB24 = $obB24->client->call(
-                    'crm.item.list',
-                    [
-                        'entityTypeId' => 187, //СП Производство
-                        'order' => [
-                            'ufCrm8_1701952418411' => 'ASC' // Дата готовности
-                        ],
-                        'filter' => [
-                            'ufCrm8_1705585967731' => 754, // Срочность *
-                            'ufCrm8Status' => 896, // на складе
-                            'stageId' => $stageId, // стадия/участок
-                        ]
-                    ]
-                );
+            if ($products == []) {
+                $productFilter = [
+                    'ufCrm8_1705585967731' => 754, // Срочность *
+                    'ufCrm8Status' => 896, // на складе
+                    'stageId' => $stageId, // стадия/участок
+                ];
+                $products = Product::list($productFilter, $productOrder);
             }
-            $arrProduct = $answerB24['result']['items'];
-            Yii::warning($arrProduct, '$arrProduct_178');
-            if (count($arrProduct) == 0) {
+            if (count($products) == 0) {
                 return [
                     'page' => 9,
                     'master_id' => $masterId,
                 ];
             }
-            if (count($arrProduct) >= 1) {
-                $component = new \wm\b24tools\b24Tools();
-                $b24App = $component->connectFromAdmin();
-                $obB24 = new \Bitrix24\B24Object($b24App);
-                $answerB24 = $obB24->client->call(
-                    'crm.item.update',
-                    [
-                        'entityTypeId' => 187, //СП Производство
-                        'id' => $arrProduct[0]['id'],
-                        'fields' => [
-                            'ufCrm8Status' => 898, // в работе
-                            'ufCrm8Master' => $masterId,
-                        ]
-                    ]
-                );
-                $component = new \wm\b24tools\b24Tools();
-                $b24App = $component->connectFromAdmin();
-                $obB24 = new \Bitrix24\B24Object($b24App);
-                $history = $obB24->client->call(
-                    'crm.item.add',
-                    [
-                        'entityTypeId' => 1042, // СП История изделия
-                        'fields' => [
-                            'ufCrm16Master' => $masterId,
-                            'ufCrm16Status' => 882, // в работе
-                            'ufCrm16Srochnost' => $arrProduct[0]['ufCrm8_1705585967731'], // срочность
-                            'ufCrm16Product' => $arrProduct[0]['id'],
-                            'ufCrm16Operation' => 922, // взял в работу
-                            'ufCrm16Uchastok' => $masterWorkshop // участок
-                        ]
-                    ]
-                );
-//                $this->addHistoryProduct($arrDate);
+            if (count($products) >= 1) {
+                $product = $products[0];
+                $productFields = [
+                    'ufCrm8Status' => 898, // в работе
+                    'ufCrm8Master' => $masterId,
+                ];
+                Product::update($product->id, $productFields);
+                $historyFields = [
+                    'ufCrm16Master' => $masterId,
+                    'ufCrm16Status' => 882, // в работе
+                    'ufCrm16Srochnost' => $product ->getHistoryPriorityId(), // срочность
+                    'parentId187' => $product->id,
+                    'ufCrm16Operation' => 922, // взял в работу
+                    'ufCrm16Uchastok' => $masterWorkshop // участок
+                ];
+                HistoryProduct::add($historyFields);
                 return [
-                    'page' => 2,
-                    'product_name' => $arrProduct[0]['title'],
-                    'product_id' => $arrProduct[0]['id'],
-                    'master_id' => $arrProduct[0]['ufCrm8Master']
+                    'page' => 'main',
+                    'product_name' => $product->title,
+                    'product_id' => $product->id,
+                    'master_id' => $product->masterId
                 ];
             }
         }

@@ -79,7 +79,7 @@ class SiteController extends Controller
         ) {
             \Yii::$app->getResponse()->redirect(\Yii::$app->getUser()->loginUrl);
         } else {
-            Yii::$app->response->redirect(Url::to('master/start'));
+            Yii::$app->response->redirect(Url::to('productManagement/workplace/start'));
         }
         return $this->render('index');
     }

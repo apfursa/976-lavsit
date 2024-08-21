@@ -49,7 +49,7 @@ class SpController extends \wm\admin\controllers\RestController
             [
                 'entityTypeId' => 1042, //СП "История изделия"
                 'order' => ['id' => 'DESC'], // сортировать по убыванию
-                'filter' => ['id' => 180, ]
+                'filter' => ['parentId187' => 9788, ],
             ]
         )['result']['items'][0];
         return $history;
