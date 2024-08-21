@@ -9,6 +9,7 @@ use app\models\productManagement\WorkingHours;
 use app\models\productManagement\Workplace;
 use Yii;
 use yii\filters\AccessControl;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\Response;
@@ -118,6 +119,46 @@ class WorkplaceController extends Controller
         }
         if ($typeOfCompletion == 'no entry' || $typeOfCompletion == 'completed by the user' || $typeOfCompletion == 'fixed by user') {
             WorkingHours::add($master);
+            $orderHistoryProduct = ['id' => 'DESC']; // В порядке убывания
+            $filterHistoryProduct = [
+                'ufCrm16Master' => $master['id'],
+            ];
+            $historys = HistoryProduct::list($filterHistoryProduct, $orderHistoryProduct);
+            if($historys != []){
+                $history = $historys[0];
+                if($history->operationId == 914){
+                    Yii::warning(ArrayHelper::toArray($history), '$history');
+                    $product = Product::get($history->productId);
+                    $productFields = [
+                        'ufCrm8Status' => 898, // в работе
+                        'ufCrm8Master' => $master['id'],
+                    ];
+                    Product::update($product->id, $productFields);
+                    $historyProductUchastok = (new \yii\db\Query())
+                        ->select(['historyProductUchastok'])
+                        ->from('workshop')
+                        ->where(['masterWorkshop' => $master['ufCrm14Workshop']])
+                        ->one()['historyProductUchastok'];
+                    $historyFields = [
+                        'ufCrm16Master' => $master['id'],
+                        'ufCrm16Status' => 882, // в работе
+                        'ufCrm16Srochnost' => $product->getHistoryPriorityId(), // срочность
+                        'parentId187' => $product->id,
+                        'ufCrm16Operation' => 906, // начало рабочего дня
+                        'ufCrm16Uchastok' => $historyProductUchastok // участок
+                    ];
+                    HistoryProduct::add($historyFields);
+                    return $this->render(
+                        'technologicalPause',
+                        [
+                            'product_name' => $product->title,
+                            'product_id' => $product->id,
+                        ]
+                    );
+                }
+            }
+
+
             $products = Product::getProductsWithStatusInWork($master);
             if (count($products) > 1) {
                 return $this->render(

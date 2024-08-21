@@ -49,6 +49,10 @@ class HistoryProduct extends Model
     /**
      * @var
      */
+//    public $parentId187;
+    /**
+     * @var
+     */
     public $operationId;
 
     /**
@@ -133,6 +137,24 @@ class HistoryProduct extends Model
 
     }
 
+    /**
+     * @param $fields
+     * @return void
+     * @throws \Bitrix24\Exceptions\Bitrix24ApiException
+     * @throws \Bitrix24\Exceptions\Bitrix24EmptyResponseException
+     * @throws \Bitrix24\Exceptions\Bitrix24Exception
+     * @throws \Bitrix24\Exceptions\Bitrix24IoException
+     * @throws \Bitrix24\Exceptions\Bitrix24MethodNotFoundException
+     * @throws \Bitrix24\Exceptions\Bitrix24PaymentRequiredException
+     * @throws \Bitrix24\Exceptions\Bitrix24PortalDeletedException
+     * @throws \Bitrix24\Exceptions\Bitrix24PortalRenamedException
+     * @throws \Bitrix24\Exceptions\Bitrix24SecurityException
+     * @throws \Bitrix24\Exceptions\Bitrix24TokenIsExpiredException
+     * @throws \Bitrix24\Exceptions\Bitrix24TokenIsInvalidException
+     * @throws \Bitrix24\Exceptions\Bitrix24WrongClientException
+     * @throws \yii\base\Exception
+     * @throws \yii\db\Exception
+     */
     public static function add($fields)
     {
         $component = new \wm\b24tools\b24Tools();
@@ -189,11 +211,32 @@ class HistoryProduct extends Model
         return ArrayHelper::getValue(self::PRIORITY_HISTORY_PRODUCT, $this->priorityId);
     }
 
+    /**
+     * @return void
+     */
     public static function addEntryToHistory()
     {
 
     }
 
+    /**
+     * @param $product
+     * @return mixed
+     * @throws \Bitrix24\Exceptions\Bitrix24ApiException
+     * @throws \Bitrix24\Exceptions\Bitrix24EmptyResponseException
+     * @throws \Bitrix24\Exceptions\Bitrix24Exception
+     * @throws \Bitrix24\Exceptions\Bitrix24IoException
+     * @throws \Bitrix24\Exceptions\Bitrix24MethodNotFoundException
+     * @throws \Bitrix24\Exceptions\Bitrix24PaymentRequiredException
+     * @throws \Bitrix24\Exceptions\Bitrix24PortalDeletedException
+     * @throws \Bitrix24\Exceptions\Bitrix24PortalRenamedException
+     * @throws \Bitrix24\Exceptions\Bitrix24SecurityException
+     * @throws \Bitrix24\Exceptions\Bitrix24TokenIsExpiredException
+     * @throws \Bitrix24\Exceptions\Bitrix24TokenIsInvalidException
+     * @throws \Bitrix24\Exceptions\Bitrix24WrongClientException
+     * @throws \yii\base\Exception
+     * @throws \yii\db\Exception
+     */
     public static function getLatestProductHistory($product)
     {
         $component = new \wm\b24tools\b24Tools();
