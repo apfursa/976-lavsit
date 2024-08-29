@@ -55,6 +55,8 @@ class Product extends Model
      */
     public $deadline;
 
+    public $link;
+
     /**
      * @param $id
      * @return Product
@@ -162,6 +164,7 @@ class Product extends Model
         $model->statusId = ArrayHelper::getValue($arr, 'ufCrm8Status');
         $model->priorityId = ArrayHelper::getValue($arr, 'ufCrm8_1705585967731');
         $model->deadline = ArrayHelper::getValue($arr, 'ufCrm8_1701952418411');
+        $model->link = ArrayHelper::getValue($arr, 'ufCrm8Link.urlMachine');
         return $model;
     }
 
@@ -287,6 +290,20 @@ class Product extends Model
             'ufCrm8Status' => 902, // технологическая пауза
         ];
         self::update($product_id, $fields);
+
+        $orderHistoryProduct = ['id' => 'DESC']; // В порядке убывания
+        $filterHistoryProduct = [
+            'ufCrm16Master' => $product->masterId,
+        ];
+        $historys = HistoryProduct::list($filterHistoryProduct, $orderHistoryProduct);
+        if ($historys != []) {
+            $history = $historys[0];
+            // поставил на технологическую паузу
+            if ($history->operationId == 914) {
+                return $product;
+            }
+        }
+
         $historyFields = [
             'ufCrm16Master' => $product->masterId,
             'ufCrm16Status' => 886, // технологическая пауза
@@ -311,6 +328,20 @@ class Product extends Model
             'ufCrm8Status' => 898, // в работе
         ];
         self::update($product_id, $fields);
+
+        $orderHistoryProduct = ['id' => 'DESC']; // В порядке убывания
+        $filterHistoryProduct = [
+            'ufCrm16Master' => $product->masterId,
+        ];
+        $historys = HistoryProduct::list($filterHistoryProduct, $orderHistoryProduct);
+        if ($historys != []) {
+            $history = $historys[0];
+            // поставил на паузу
+            if ($history->operationId == 916) {
+                return $product;
+            }
+        }
+
 
         $historyFields = [
             'ufCrm16Master' => $product->masterId,
@@ -337,6 +368,21 @@ class Product extends Model
             'ufCrm8Status' => 904, // пауза
         ];
         self::update($product_id, $fields);
+
+        $orderHistoryProduct = ['id' => 'DESC']; // В порядке убывания
+        $filterHistoryProduct = [
+            'ufCrm16Master' => $product->masterId,
+        ];
+        $historys = HistoryProduct::list($filterHistoryProduct, $orderHistoryProduct);
+        if ($historys != []) {
+            $history = $historys[0];
+            // поставил на паузу
+            if ($history->operationId == 910) {
+                return $product;
+            }
+        }
+
+
         $historyFields = [
             'ufCrm16Master' => $product->masterId,
             'ufCrm16Status' => 888, // пауза
@@ -361,6 +407,20 @@ class Product extends Model
             'ufCrm8Status' => 898, // в работе
         ];
         self::update($product_id, $fields);
+
+        $orderHistoryProduct = ['id' => 'DESC']; // В порядке убывания
+        $filterHistoryProduct = [
+            'ufCrm16Master' => $product->masterId,
+        ];
+        $historys = HistoryProduct::list($filterHistoryProduct, $orderHistoryProduct);
+        if ($historys != []) {
+            $history = $historys[0];
+            // поставил на паузу
+            if ($history->operationId == 912) {
+                return $product;
+            }
+        }
+
         $historyFields = [
             'ufCrm16Master' => $product->masterId,
             'ufCrm16Status' =>  882, // в работе

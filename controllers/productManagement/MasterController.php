@@ -117,7 +117,6 @@ class MasterController extends Controller
         $master = $this->getMasterByUserId($usersId);
         $model = new Master();
         $arrData = $model->start();
-        Yii::warning($arrData, 'MasterController_Start_$arrData_112');
         if ($arrData['page'] == 1) {
             return $this->render('start1');
         }
@@ -165,8 +164,6 @@ class MasterController extends Controller
 
     public function actionEndWorkingDay($product_id = null, $master_id = null)
     {
-        Yii::warning($product_id, 'actionEndWorkingDay_$product_id');
-        Yii::warning($master_id, 'actionEndWorkingDay_$master_id');
         $model = new Master();
         $model->endWorkingDay($product_id, $master_id);
         Yii::$app->user->logout();

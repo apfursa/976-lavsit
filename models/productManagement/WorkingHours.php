@@ -17,8 +17,17 @@ class WorkingHours extends Model
      *
      */
     public const ENTITY_TYPE_ID = 1046;
+    /**
+     *
+     */
     public const COMPLETED_BY_USER = 890;
+    /**
+     *
+     */
     public const COMPLETED_AUTOMATICALLY = 892;
+    /**
+     *
+     */
     public const FIXED_BY_USER = 894;
     /**
      * @var
@@ -200,6 +209,24 @@ class WorkingHours extends Model
         return $arr;
     }
 
+    /**
+     * @param $master
+     * @return string|void
+     * @throws \Bitrix24\Exceptions\Bitrix24ApiException
+     * @throws \Bitrix24\Exceptions\Bitrix24EmptyResponseException
+     * @throws \Bitrix24\Exceptions\Bitrix24Exception
+     * @throws \Bitrix24\Exceptions\Bitrix24IoException
+     * @throws \Bitrix24\Exceptions\Bitrix24MethodNotFoundException
+     * @throws \Bitrix24\Exceptions\Bitrix24PaymentRequiredException
+     * @throws \Bitrix24\Exceptions\Bitrix24PortalDeletedException
+     * @throws \Bitrix24\Exceptions\Bitrix24PortalRenamedException
+     * @throws \Bitrix24\Exceptions\Bitrix24SecurityException
+     * @throws \Bitrix24\Exceptions\Bitrix24TokenIsExpiredException
+     * @throws \Bitrix24\Exceptions\Bitrix24TokenIsInvalidException
+     * @throws \Bitrix24\Exceptions\Bitrix24WrongClientException
+     * @throws \yii\base\Exception
+     * @throws \yii\db\Exception
+     */
     public static function howWorkingDayCompleted($master)
     {
         $filter = [
@@ -229,6 +256,25 @@ class WorkingHours extends Model
         }
     }
 
+    /**
+     * @param $product_id
+     * @param $master_id
+     * @return void
+     * @throws \Bitrix24\Exceptions\Bitrix24ApiException
+     * @throws \Bitrix24\Exceptions\Bitrix24EmptyResponseException
+     * @throws \Bitrix24\Exceptions\Bitrix24Exception
+     * @throws \Bitrix24\Exceptions\Bitrix24IoException
+     * @throws \Bitrix24\Exceptions\Bitrix24MethodNotFoundException
+     * @throws \Bitrix24\Exceptions\Bitrix24PaymentRequiredException
+     * @throws \Bitrix24\Exceptions\Bitrix24PortalDeletedException
+     * @throws \Bitrix24\Exceptions\Bitrix24PortalRenamedException
+     * @throws \Bitrix24\Exceptions\Bitrix24SecurityException
+     * @throws \Bitrix24\Exceptions\Bitrix24TokenIsExpiredException
+     * @throws \Bitrix24\Exceptions\Bitrix24TokenIsInvalidException
+     * @throws \Bitrix24\Exceptions\Bitrix24WrongClientException
+     * @throws \yii\base\Exception
+     * @throws \yii\db\Exception
+     */
     public static function endWorkingDay($product_id, $master_id)
     {
         if ($product_id) {
@@ -280,4 +326,82 @@ class WorkingHours extends Model
             }
         }
     }
+
+    public static function endWorkingDayAutomatically()
+    {
+        $component = new \wm\b24tools\b24Tools();
+        $b24App = $component->connectFromAdmin();
+        $obB24 = new \Bitrix24\B24Object($b24App);
+        $request = $obB24->client->call(
+            'crm.item.list',
+            [
+                'entityTypeId' => self::ENTITY_TYPE_ID,
+                'order' => ['id' => 'ASC'], // по возрастанию
+                'filter' => [
+                    'ufCrm18UshelTime' => '',
+                    '>id' => 0
+                ]
+            ]
+        );
+        $count = ArrayHelper::getValue($request, 'total');
+
+//        if($ids != []){
+//            foreach($ids as $id){
+//                $obB24->client->addBatchCall(
+//                    'crm.item.productrow.list',
+//                    [
+//                        'filter' => [
+//                            '=ownerType' => 'TBF',
+//                            '=ownerId' => $id
+//                        ]
+//                    ],
+//                    function ($result) use (&$res) {
+//                        $res = array_merge($res, $result['result']['productRows']);
+//                    }
+//                );
+//            }
+//        }
+//
+//        $obB24->client->processBatchCalls();
+        $data = date('Y-m-d');
+        $time = date('H:i:s');
+        while ($count > 0) {
+            $maxId = max(ArrayHelper::getColumn($request['result']['items'], 'id'));
+            $component = new \wm\b24tools\b24Tools();
+            $b24App = $component->connectFromAdmin();
+            $obB24 = new \Bitrix24\B24Object($b24App);
+            foreach ($request['result']['items'] as $item) {
+                $obB24->client->addBatchCall(
+                    'crm.item.update',
+                    [
+                        'entityTypeId' => self::ENTITY_TYPE_ID,
+                        'id' => $item['id'],
+                        'fields' => [
+                            'ufCrm18UshelData' => $data,
+                            'ufCrm18UshelTime' => $time,
+                            'ufCrm18TerminatioType' => 892 // Завершено автоматически
+                        ]
+                    ]
+                );
+            }
+            $obB24->client->processBatchCalls();
+            sleep(5);
+            $component = new \wm\b24tools\b24Tools();
+            $b24App = $component->connectFromAdmin();
+            $obB24 = new \Bitrix24\B24Object($b24App);
+            $request = $obB24->client->call(
+                'crm.item.list',
+                [
+                    'entityTypeId' => self::ENTITY_TYPE_ID,
+                    'order' => ['id' => 'ASC'], // по возрастанию
+                    'filter' => [
+                        'ufCrm18UshelTime' => '',
+                        '>id' => $maxId
+                    ]
+                ]
+            );
+            $count = ArrayHelper::getValue($request, 'total');
+        }
+    }
+
 }

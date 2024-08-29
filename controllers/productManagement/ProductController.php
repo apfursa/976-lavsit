@@ -188,6 +188,7 @@ class ProductController extends Controller
             [
                 'product_name' => $product->title,
                 'product_id' => $product->id,
+                'link' => $product->link
 //                    'master_id' => $product->masterId
             ]
         );
@@ -216,6 +217,7 @@ class ProductController extends Controller
             [
                 'product_name' => $product->title,
                 'product_id' => $product->id,
+                'link' => $product->link
 //                    'master_id' => $product->masterId
             ]
         );

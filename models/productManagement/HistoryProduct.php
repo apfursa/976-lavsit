@@ -134,7 +134,17 @@ class HistoryProduct extends Model
      */
     public static function update($id, $fields)
     {
-
+        $component = new \wm\b24tools\b24Tools();
+        $b24App = $component->connectFromAdmin();
+        $obB24 = new \Bitrix24\B24Object($b24App);
+        $answerB24 = $obB24->client->call(
+            'crm.item.update',
+            [
+                'entityTypeId' => self::ENTITY_TYPE_ID,
+                'id' => $id,
+                'fields' => $fields
+            ]
+        );
     }
 
     /**

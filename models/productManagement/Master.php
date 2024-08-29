@@ -97,7 +97,6 @@ class Master extends Model
             $query = (new \yii\db\Query())->select(['stageId'])->from('workshop')->where(['masterWorkshop' => $masterWorkshop]);
             $data = $query->one();
             $stageId = $data['stageId'];
-            Yii::warning($data, '$data');
             if ($products == []) {
                 $productFilter = [
                     'ufCrm8_1705585967731' => 766, // Срочность ***
@@ -164,7 +163,6 @@ class Master extends Model
                     'filter' => ['ufCrm16Master' => $masterId,]
                 ]
             )['result']['items'][0];
-            Yii::warning($history, '$history');
             // Если статус последней записи == "технологическая пауза"
             if ($history['ufCrm16Status'] == 886) {
 
@@ -311,7 +309,6 @@ class Master extends Model
                 $query = (new \yii\db\Query())->select(['stageId'])->from('workshop')->where(['masterWorkshop' => $masterWorkshop]);
                 $data = $query->one();
                 $stageId = $data['stageId'];
-                Yii::warning($data, '$data');
                 if ($answerB24['result']['items'] == []) {
                     $component = new \wm\b24tools\b24Tools();
                     $b24App = $component->connectFromAdmin();
@@ -379,7 +376,6 @@ class Master extends Model
                     );
                 }
                 $arrProduct = $answerB24['result']['items'];
-                Yii::warning($arrProduct, '$arrProduct_178');
                 if (count($arrProduct) == 0) {
                     return [
                         'page' => 9,
@@ -469,7 +465,6 @@ class Master extends Model
             'time' => $time,
             'masterWorkshop' => $master['ufCrm14Workshop']
         ];
-        Yii::warning($arrData, 'uchetRabochegoVremeny_$arrData_289');
 
         $component = new \wm\b24tools\b24Tools();
         $b24App = $component->connectFromAdmin();
@@ -483,7 +478,6 @@ class Master extends Model
             ]
         );
         $uchetRabochegoVremeny = $answerB24['result']['items'];
-        Yii::warning($uchetRabochegoVremeny, '$uchetRabochegoVremeny');
         if ($uchetRabochegoVremeny == []) {
             $this->addEntryToSpUchetRabochegoVremeny($arrData);
             return 'ok';
@@ -502,8 +496,6 @@ class Master extends Model
                 $this->addEntryToSpUchetRabochegoVremeny($arrData);
                 return 'beginningWorkingDay'; // начало рабочего дня
             }
-            Yii::warning($uchetRabochegoVremeny[0]['ufCrm18UshelTime'], 'ufCrm18UshelTime');
-            Yii::warning($continue, '$continue');
 
             if ($uchetRabochegoVremeny[0]['ufCrm18UshelTime'] == '' && $continue !== false) {
                 return 'ok';
@@ -779,7 +771,6 @@ class Master extends Model
         $component = new \wm\b24tools\b24Tools();
         $b24App = $component->connectFromAdmin();
         $obB24 = new \Bitrix24\B24Object($b24App);
-        Yii::warning($product_id, '$product_id');
         $answerB24 = $obB24->client->call(
             'crm.item.update',
             [

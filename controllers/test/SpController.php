@@ -30,9 +30,10 @@ class SpController extends \wm\admin\controllers\RestController
             'crm.item.list',
             [
                 'entityTypeId' => $typeId,
-//                'order' => ['id'=>'DESC'],
+                'order' => ['id' => 'ASC'],
                 'filter' => [
-                    'id' => 9980
+                    '>id' => 0,
+                    'ufCrm18UshelTime' => ''
                 ]
             ]
         );
@@ -49,7 +50,7 @@ class SpController extends \wm\admin\controllers\RestController
             [
                 'entityTypeId' => 1042, //СП "История изделия"
                 'order' => ['id' => 'DESC'], // сортировать по убыванию
-                'filter' => ['parentId187' => 9788, ],
+                'filter' => ['parentId187' => 9788,],
             ]
         )['result']['items'][0];
         return $history;

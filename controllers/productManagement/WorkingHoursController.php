@@ -7,6 +7,7 @@ use app\models\productManagement\WorkingHours;
 use app\models\productManagement\Workplace;
 use Yii;
 use yii\filters\AccessControl;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\Response;
@@ -17,6 +18,7 @@ use app\models\ContactForm;
 // Рабочее время
 class WorkingHoursController extends Controller
 {
+    public $enableCsrfValidation = false;
 
     /**
      * @return mixed[]
@@ -146,7 +148,6 @@ class WorkingHoursController extends Controller
 
         $model = new Master();
         $arrData = $model->start($continue);
-        Yii::warning($arrData, 'MasterController_Start_$arrData_112');
         if ($arrData['page'] == 1) {
             return $this->render('start1');
         }
@@ -213,14 +214,26 @@ class WorkingHoursController extends Controller
     {
         $usersId = Yii::$app->user->id;
         $master = $this->getMasterByUserId($usersId);
-        return $this->render(
-            'changeEndTimeOfWorkingDay',
-            [
-//                'product_name' => $arrData['product_name'],
-//                'product_id' => $arrData['product_id'],
-//                'master_id' => $arrData['master_id'],
-            ]
-        );
+        $filter = [
+            'ufCrm18Master' => $master['id'],
+            'ufCrm18TerminatioType' => 892 // Завершено автоматически
+        ];
+        $order = [
+            'id' => 'DESC', // сортировать по убыванию
+        ];
+        $models = WorkingHours::list($filter, $order);
+        if ($models != []) {
+            $model =  $models[0];
+            return $this->render(
+                'changeEndTimeOfWorkingDay',
+                [
+                    'master_id' => $master['id'],
+                    'timeEnd' => date("H:i:s", strtotime($model->timeEnd)),
+                    'dateEnd' => date("Y-m-d", strtotime($model->dateEnd)),
+                    'entity_id' => $model->id,
+                ]
+            );
+        }
     }
 
     public function actionEndWorkingDay($product_id = null, $master_id = null)
@@ -230,5 +243,21 @@ class WorkingHoursController extends Controller
         WorkingHours::endWorkingDay($product_id, $master_id);
         Yii::$app->user->logout();
         return $this->goHome();
+    }
+
+    public function actionChangeTime()
+    {
+        $request = Yii::$app->request;
+        $date = $request->post('date');
+        $time = $request->post('time');
+        $entity_id = $request->post('entity_id');
+        $fields = [
+            'ufCrm18UshelTime' => $time,
+            'ufCrm18UshelData' => $date,
+            'ufCrm18TerminatioType' => 894, // Исправлено пользователем
+        ];
+        WorkingHours::update($entity_id, $fields);
+        sleep(5);
+        Yii::$app->response->redirect('https://test.mysmartautomation.ru/productManagement/workplace/start');
     }
 }
