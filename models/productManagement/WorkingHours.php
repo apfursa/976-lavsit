@@ -14,52 +14,56 @@ use Yii;
 class WorkingHours extends Model
 {
     /**
-     *
+     * @var int
      */
     public const ENTITY_TYPE_ID = 1046;
     /**
-     *
+     * @var int
      */
     public const COMPLETED_BY_USER = 890;
     /**
-     *
+     * @var int
      */
     public const COMPLETED_AUTOMATICALLY = 892;
     /**
-     *
+     * @var int
      */
     public const FIXED_BY_USER = 894;
-    /**
-     * @var
-     */
-    public $id;
-    /**
-     * @var
-     */
-    public $masterId;
-    /**
-     * @var
-     */
-    public $dateStart;
-    /**
-     * @var
-     */
-    public $timeStart;
-    /**
-     * @var
-     */
-    public $dateEnd;
-    /**
-     * @var
-     */
-    public $timeEnd;
-    /**
-     * @var
-     */
-    public $typeOfCompletion;
 
     /**
-     * @param $id
+     * @var int
+     */
+    public int $id;
+
+    /**
+     * @var int
+     */
+    public int $masterId;
+
+    /**
+     * @var string
+     */
+    public string $dateStart;
+
+    /**
+     * @var string
+     */
+    public string $timeStart;
+    /**
+     * @var string
+     */
+    public string $dateEnd;
+    /**
+     * @var string
+     */
+    public string $timeEnd;
+    /**
+     * @var string
+     */
+    public string $typeOfCompletion;
+
+    /**
+     * @param $id int
      * @return WorkingHours
      * @throws \Bitrix24\Exceptions\Bitrix24ApiException
      * @throws \Bitrix24\Exceptions\Bitrix24EmptyResponseException
@@ -76,7 +80,7 @@ class WorkingHours extends Model
      * @throws \yii\base\Exception
      * @throws \yii\db\Exception
      */
-    public static function get($id)
+    public static function get(int $id): WorkingHours
     {
         $component = new \wm\b24tools\b24Tools();
         $b24App = $component->connectFromAdmin();
@@ -92,8 +96,8 @@ class WorkingHours extends Model
     }
 
     /**
-     * @param $filter
-     * @param $order
+     * @param array<string, mixed> $filter
+     * @param array<string, mixed> $order
      * @return WorkingHours[]
      * @throws \Bitrix24\Exceptions\Bitrix24ApiException
      * @throws \Bitrix24\Exceptions\Bitrix24EmptyResponseException
@@ -110,7 +114,7 @@ class WorkingHours extends Model
      * @throws \yii\base\Exception
      * @throws \yii\db\Exception
      */
-    public static function list($filter = [], $order = [])
+    public static function list(array $filter = [], array $order = []): array
     {
         $component = new \wm\b24tools\b24Tools();
         $b24App = $component->connectFromAdmin();
@@ -131,11 +135,11 @@ class WorkingHours extends Model
     }
 
     /**
-     * @param $id
-     * @param $fields
+     * @param $id int
+     * @param array<string, mixed> $fields
      * @return void
      */
-    public static function update($id, $fields)
+    public static function update(int $id, array $fields)
     {
         $component = new \wm\b24tools\b24Tools();
         $b24App = $component->connectFromAdmin();
@@ -151,11 +155,10 @@ class WorkingHours extends Model
     }
 
     /**
-     * @param $id
-     * @param $fields
+     * @param array<string, mixed> $master
      * @return void
      */
-    public static function add($master)
+    public static function add(array $master)
     {
         $component = new \wm\b24tools\b24Tools();
         $b24App = $component->connectFromAdmin();
@@ -174,11 +177,11 @@ class WorkingHours extends Model
     }
 
     /**
-     * @param $arr
+     * @param array<string, mixed> $arr
      * @return WorkingHours
      * @throws \Exception
      */
-    private static function b24ToObject($arr)
+    private static function b24ToObject(array $arr): WorkingHours
     {
         $model = new WorkingHours();
         $model->id = ArrayHelper::getValue($arr, 'id');
@@ -195,6 +198,7 @@ class WorkingHours extends Model
      * @param $model
      * @return array
      */
+    /*
     private function objectToB24($model)
     {
         $arr = [
@@ -208,9 +212,10 @@ class WorkingHours extends Model
         ];
         return $arr;
     }
+    */
 
     /**
-     * @param $master
+     * @param array<string, mixed> $master
      * @return string|void
      * @throws \Bitrix24\Exceptions\Bitrix24ApiException
      * @throws \Bitrix24\Exceptions\Bitrix24EmptyResponseException
@@ -227,7 +232,7 @@ class WorkingHours extends Model
      * @throws \yii\base\Exception
      * @throws \yii\db\Exception
      */
-    public static function howWorkingDayCompleted($master)
+    public static function howWorkingDayCompleted(array $master)
     {
         $filter = [
             'ufCrm18Master' => $master['id'],
@@ -257,8 +262,8 @@ class WorkingHours extends Model
     }
 
     /**
-     * @param $product_id
-     * @param $master_id
+     * @param int $product_id
+     * @param int $master_id
      * @return void
      * @throws \Bitrix24\Exceptions\Bitrix24ApiException
      * @throws \Bitrix24\Exceptions\Bitrix24EmptyResponseException
@@ -275,7 +280,7 @@ class WorkingHours extends Model
      * @throws \yii\base\Exception
      * @throws \yii\db\Exception
      */
-    public static function endWorkingDay($product_id, $master_id)
+    public static function endWorkingDay(int $product_id, int $master_id)
     {
         if ($product_id) {
             $product = Product::get($product_id);
@@ -307,7 +312,8 @@ class WorkingHours extends Model
                 'ufCrm16Srochnost' => $product->getHistoryPriorityId(), // срочность
                 'parentId187' => $product->id,
                 'ufCrm16Operation' => 908, // конец рабочего дня
-                'ufCrm16Uchastok' => $historyProductUchastok // участок
+                'ufCrm16Uchastok' => $historyProductUchastok, // участок
+                'ufCrm16Dateandtime' => date('d-m-Y H:i:s'), // дата и время
             ];
             HistoryProduct::add($historyFields);
         }
@@ -327,6 +333,23 @@ class WorkingHours extends Model
         }
     }
 
+    /**
+     * @return void
+     * @throws \Bitrix24\Exceptions\Bitrix24ApiException
+     * @throws \Bitrix24\Exceptions\Bitrix24EmptyResponseException
+     * @throws \Bitrix24\Exceptions\Bitrix24Exception
+     * @throws \Bitrix24\Exceptions\Bitrix24IoException
+     * @throws \Bitrix24\Exceptions\Bitrix24MethodNotFoundException
+     * @throws \Bitrix24\Exceptions\Bitrix24PaymentRequiredException
+     * @throws \Bitrix24\Exceptions\Bitrix24PortalDeletedException
+     * @throws \Bitrix24\Exceptions\Bitrix24PortalRenamedException
+     * @throws \Bitrix24\Exceptions\Bitrix24SecurityException
+     * @throws \Bitrix24\Exceptions\Bitrix24TokenIsExpiredException
+     * @throws \Bitrix24\Exceptions\Bitrix24TokenIsInvalidException
+     * @throws \Bitrix24\Exceptions\Bitrix24WrongClientException
+     * @throws \yii\base\Exception
+     * @throws \yii\db\Exception
+     */
     public static function endWorkingDayAutomatically()
     {
         $component = new \wm\b24tools\b24Tools();
@@ -403,5 +426,4 @@ class WorkingHours extends Model
             $count = ArrayHelper::getValue($request, 'total');
         }
     }
-
 }

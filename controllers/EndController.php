@@ -11,6 +11,9 @@ use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
 
+/**
+ *
+ */
 class EndController extends Controller
 {
     /**
@@ -55,11 +58,14 @@ class EndController extends Controller
         ];
     }
 
+    /**
+     * @return void
+     */
     public function actionEndWorkingDay()
     {
-        $model = new Master();
-        $model->end();
-        Yii::$app->user->logout();
-        return $this->goHome();
+//        $model = new Master();
+//        $model->end();
+//        Yii::$app->user->logout();
+//        return $this->goHome();
     }
 }

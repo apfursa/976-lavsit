@@ -2,7 +2,9 @@
 
 namespace app\controllers\productManagement;
 
+use app\models\productManagement\HistoryProduct;
 use app\models\productManagement\Master;
+use app\models\productManagement\Product;
 use app\models\productManagement\WorkingHours;
 use app\models\productManagement\Workplace;
 use Yii;
@@ -16,8 +18,15 @@ use app\models\LoginForm;
 use app\models\ContactForm;
 
 // Рабочее время
+
+/**
+ *
+ */
 class WorkingHoursController extends Controller
 {
+    /**
+     * @var bool
+     */
     public $enableCsrfValidation = false;
 
     /**
@@ -117,6 +126,25 @@ class WorkingHoursController extends Controller
         return $this->goHome();
     }
 
+    /**
+     * @param $continue
+     * @return string|void
+     * @throws \Bitrix24\Exceptions\Bitrix24ApiException
+     * @throws \Bitrix24\Exceptions\Bitrix24EmptyResponseException
+     * @throws \Bitrix24\Exceptions\Bitrix24Exception
+     * @throws \Bitrix24\Exceptions\Bitrix24IoException
+     * @throws \Bitrix24\Exceptions\Bitrix24MethodNotFoundException
+     * @throws \Bitrix24\Exceptions\Bitrix24PaymentRequiredException
+     * @throws \Bitrix24\Exceptions\Bitrix24PortalDeletedException
+     * @throws \Bitrix24\Exceptions\Bitrix24PortalRenamedException
+     * @throws \Bitrix24\Exceptions\Bitrix24SecurityException
+     * @throws \Bitrix24\Exceptions\Bitrix24TokenIsExpiredException
+     * @throws \Bitrix24\Exceptions\Bitrix24TokenIsInvalidException
+     * @throws \Bitrix24\Exceptions\Bitrix24WrongClientException
+     * @throws \yii\base\Exception
+     * @throws \yii\base\InvalidRouteException
+     * @throws \yii\db\Exception
+     */
     public function actionStart($continue = false)
     {
         $usersId = Yii::$app->user->id;
@@ -175,14 +203,16 @@ class WorkingHoursController extends Controller
             return $this->render('start3');
         }
         if ($arrData['page'] == 'continue') {
-            return $this->render('continue',
+            return $this->render(
+                'continue',
                 [
                     'master_id' => $arrData['master_id'],
                 ]
             );
         }
         if ($arrData['page'] == 9) {
-            return $this->render('page9',
+            return $this->render(
+                'page9',
                 [
                     'master_id' => $arrData['master_id'],
                 ]
@@ -194,6 +224,24 @@ class WorkingHoursController extends Controller
     }
 
 
+    /**
+     * @param $usersId
+     * @return mixed
+     * @throws \Bitrix24\Exceptions\Bitrix24ApiException
+     * @throws \Bitrix24\Exceptions\Bitrix24EmptyResponseException
+     * @throws \Bitrix24\Exceptions\Bitrix24Exception
+     * @throws \Bitrix24\Exceptions\Bitrix24IoException
+     * @throws \Bitrix24\Exceptions\Bitrix24MethodNotFoundException
+     * @throws \Bitrix24\Exceptions\Bitrix24PaymentRequiredException
+     * @throws \Bitrix24\Exceptions\Bitrix24PortalDeletedException
+     * @throws \Bitrix24\Exceptions\Bitrix24PortalRenamedException
+     * @throws \Bitrix24\Exceptions\Bitrix24SecurityException
+     * @throws \Bitrix24\Exceptions\Bitrix24TokenIsExpiredException
+     * @throws \Bitrix24\Exceptions\Bitrix24TokenIsInvalidException
+     * @throws \Bitrix24\Exceptions\Bitrix24WrongClientException
+     * @throws \yii\base\Exception
+     * @throws \yii\db\Exception
+     */
     public function getMasterByUserId($usersId)
     {
         $component = new \wm\b24tools\b24Tools();
@@ -210,6 +258,23 @@ class WorkingHoursController extends Controller
         return $master;
     }
 
+    /**
+     * @return string|void
+     * @throws \Bitrix24\Exceptions\Bitrix24ApiException
+     * @throws \Bitrix24\Exceptions\Bitrix24EmptyResponseException
+     * @throws \Bitrix24\Exceptions\Bitrix24Exception
+     * @throws \Bitrix24\Exceptions\Bitrix24IoException
+     * @throws \Bitrix24\Exceptions\Bitrix24MethodNotFoundException
+     * @throws \Bitrix24\Exceptions\Bitrix24PaymentRequiredException
+     * @throws \Bitrix24\Exceptions\Bitrix24PortalDeletedException
+     * @throws \Bitrix24\Exceptions\Bitrix24PortalRenamedException
+     * @throws \Bitrix24\Exceptions\Bitrix24SecurityException
+     * @throws \Bitrix24\Exceptions\Bitrix24TokenIsExpiredException
+     * @throws \Bitrix24\Exceptions\Bitrix24TokenIsInvalidException
+     * @throws \Bitrix24\Exceptions\Bitrix24WrongClientException
+     * @throws \yii\base\Exception
+     * @throws \yii\db\Exception
+     */
     public function actionChangeEndTimeOfWorkingDay()
     {
         $usersId = Yii::$app->user->id;
@@ -223,7 +288,7 @@ class WorkingHoursController extends Controller
         ];
         $models = WorkingHours::list($filter, $order);
         if ($models != []) {
-            $model =  $models[0];
+            $model = $models[0];
             return $this->render(
                 'changeEndTimeOfWorkingDay',
                 [
@@ -236,6 +301,25 @@ class WorkingHoursController extends Controller
         }
     }
 
+    /**
+     * @param $product_id
+     * @param $master_id
+     * @return Response
+     * @throws \Bitrix24\Exceptions\Bitrix24ApiException
+     * @throws \Bitrix24\Exceptions\Bitrix24EmptyResponseException
+     * @throws \Bitrix24\Exceptions\Bitrix24Exception
+     * @throws \Bitrix24\Exceptions\Bitrix24IoException
+     * @throws \Bitrix24\Exceptions\Bitrix24MethodNotFoundException
+     * @throws \Bitrix24\Exceptions\Bitrix24PaymentRequiredException
+     * @throws \Bitrix24\Exceptions\Bitrix24PortalDeletedException
+     * @throws \Bitrix24\Exceptions\Bitrix24PortalRenamedException
+     * @throws \Bitrix24\Exceptions\Bitrix24SecurityException
+     * @throws \Bitrix24\Exceptions\Bitrix24TokenIsExpiredException
+     * @throws \Bitrix24\Exceptions\Bitrix24TokenIsInvalidException
+     * @throws \Bitrix24\Exceptions\Bitrix24WrongClientException
+     * @throws \yii\base\Exception
+     * @throws \yii\db\Exception
+     */
     public function actionEndWorkingDay($product_id = null, $master_id = null)
     {
 //        Yii::warning($product_id, 'actionEndWorkingDay_$product_id');
@@ -245,19 +329,91 @@ class WorkingHoursController extends Controller
         return $this->goHome();
     }
 
+    /**
+     * @return void
+     * @throws \Bitrix24\Exceptions\Bitrix24ApiException
+     * @throws \Bitrix24\Exceptions\Bitrix24EmptyResponseException
+     * @throws \Bitrix24\Exceptions\Bitrix24Exception
+     * @throws \Bitrix24\Exceptions\Bitrix24IoException
+     * @throws \Bitrix24\Exceptions\Bitrix24MethodNotFoundException
+     * @throws \Bitrix24\Exceptions\Bitrix24PaymentRequiredException
+     * @throws \Bitrix24\Exceptions\Bitrix24PortalDeletedException
+     * @throws \Bitrix24\Exceptions\Bitrix24PortalRenamedException
+     * @throws \Bitrix24\Exceptions\Bitrix24SecurityException
+     * @throws \Bitrix24\Exceptions\Bitrix24TokenIsExpiredException
+     * @throws \Bitrix24\Exceptions\Bitrix24TokenIsInvalidException
+     * @throws \Bitrix24\Exceptions\Bitrix24WrongClientException
+     * @throws \yii\base\Exception
+     * @throws \yii\base\InvalidRouteException
+     * @throws \yii\db\Exception
+     */
     public function actionChangeTime()
     {
         $request = Yii::$app->request;
         $date = $request->post('date');
+        Yii::warning($date, '$date');
         $time = $request->post('time');
+        Yii::warning($time, '$time');
         $entity_id = $request->post('entity_id');
+        $master_id = $request->post('master_id');
         $fields = [
             'ufCrm18UshelTime' => $time,
             'ufCrm18UshelData' => $date,
             'ufCrm18TerminatioType' => 894, // Исправлено пользователем
         ];
         WorkingHours::update($entity_id, $fields);
-        sleep(5);
-        Yii::$app->response->redirect('https://test.mysmartautomation.ru/productManagement/workplace/start');
+
+        $filterProduct = [
+            'ufCrm8Master' => $master_id,
+            'ufCrm8Status' => 898, // в работе
+        ];
+        $products = Product::list($filterProduct);
+        if ($products == []) {
+            $filterProduct = [
+                'ufCrm8Master' => $master_id,
+                'ufCrm8Status' => 902, // технологическая пауза
+            ];
+            $products = Product::list($filterProduct);
+        }
+        if ($products == []) {
+            $filterProduct = [
+                'ufCrm8Master' => $master_id,
+                'ufCrm8Status' => 904, // пауза
+            ];
+            $products = Product::list($filterProduct);
+        }
+//        ArrayHelper::toArray($products, '$products');
+        if ($products != []) {
+            $component = new \wm\b24tools\b24Tools();
+            $b24App = $component->connectFromAdmin();
+            $obB24 = new \Bitrix24\B24Object($b24App);
+            $request = $obB24->client->call(
+                'crm.item.list',
+                [
+                    'entityTypeId' => 1042, // История изделия
+                    'order' => ['id' => 'DESC'], // по убыванию
+                    'filter' => [
+                        'ufCrm16Master' => $master_id,
+                    ]
+                ]
+            )['result']['items'];
+            if ($request != []) {
+                $history = $request[0];
+//                ArrayHelper::toArray($history, '$history');
+                $fieldsHistory = [
+                    'ufCrm16Master' => $master_id,
+                    'ufCrm16Status' => $history['ufCrm16Status'],
+                    'ufCrm16Srochnost' => $history['ufCrm16Srochnost'],
+                    'parentId187' => $history['parentId187'],
+                    'ufCrm16Operation' => 908, // конец рабочего дня
+                    'ufCrm16Uchastok' => $history['ufCrm16Uchastok'], // участок
+                    'ufCrm16Dateandtime' => date('d-m-Y ' . $time, strtotime($date)), // дата и время
+                ];
+                HistoryProduct::add($fieldsHistory);
+            }
+        }
+
+        sleep(10);
+        Yii::$app->response->redirect('https://sof.lavsit.ru/productManagement/workplace/start');
     }
 }

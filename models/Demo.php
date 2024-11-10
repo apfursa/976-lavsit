@@ -32,4 +32,3 @@ class Demo extends \wm\yii\db\ActiveRecord
         ];
     }
 }
-

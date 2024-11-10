@@ -1,4 +1,5 @@
 <?php
+
 namespace app\controllers;
 
 use app\models\CompanyReportsPivot;
@@ -17,46 +18,37 @@ use app\models\Company;
 class ReportCompanyGroupController extends \wm\admin\controllers\RestController
 {
     public $modelClass = ReportCompanyGroup::class;
-
     public function actionData()
     {
         $request = \yii::$app->request;
         $model = new CompanyReportsPivot();
         Yii::warning($request->getBodyParams());
         return $model
-            ->search(
-                array_merge
-                (
-                    $request->getBodyParams(),
-                    $request->getQueryParams()
-                )
-            );
-
-
-//        $filter = \Yii::$app->request->post('filter');
-//        $companyId = $filter['companyId'][0]['value'];
-//        $employeeId = $filter['employeeId'][0]['value'];
-//        $where = [];
-//        if ($companyId) {
-////            if (preg_match("/^(in\[.*\])/", $companyId)) {
-////                $companyId = explode(',', mb_substr($companyId, 3, -1));
-////            } else {
-////                $companyId = [$companyId];
-////            }
-//            $where['companyId'] = $companyId;
-//        }
-//        $companyReportModels = ReportCompany::find()
-//            ->with([
-//                'company',
-//                'report',
-//                'user'
-//            ])
-//            ->where($where)
-//            ->all();
-//        if ($employeeId) {
-//            $companyReportModels = CompanyReportsPivot::getDataWithFilterEmployee($employeeId, $companyReportModels);
-//        }
-//        return CompanyReportsPivot::getData($companyReportModels);
+            ->search(array_merge($request->getBodyParams(), $request->getQueryParams()));
+    //        $filter = \Yii::$app->request->post('filter');
+    //        $companyId = $filter['companyId'][0]['value'];
+    //        $employeeId = $filter['employeeId'][0]['value'];
+    //        $where = [];
+    //        if ($companyId) {
+    ////            if (preg_match("/^(in\[.*\])/", $companyId)) {
+    ////                $companyId = explode(',', mb_substr($companyId, 3, -1));
+    ////            } else {
+    ////                $companyId = [$companyId];
+    ////            }
+    //            $where['companyId'] = $companyId;
+    //        }
+    //        $companyReportModels = ReportCompany::find()
+    //            ->with([
+    //                'company',
+    //                'report',
+    //                'user'
+    //            ])
+    //            ->where($where)
+    //            ->all();
+    //        if ($employeeId) {
+    //            $companyReportModels = CompanyReportsPivot::getDataWithFilterEmployee($employeeId, $companyReportModels);
+    //        }
+    //        return CompanyReportsPivot::getData($companyReportModels);
     }
 
     public function actionGridActions()
@@ -91,7 +83,6 @@ class ReportCompanyGroupController extends \wm\admin\controllers\RestController
     public function actionIndex($categoryId = null)
     {
         $queryParams = Yii::$app->getRequest()->getQueryParams();
-
         $userBxId = User::find()->where(['id' => Yii::$app->user->getId()])->select(['b24_user_id'])->asArray()->one()['b24_user_id'];
         $adminUsers = explode(",", Settings::getParametrByName('isAdmin'));
         $isAdmin = false;
@@ -116,7 +107,6 @@ class ReportCompanyGroupController extends \wm\admin\controllers\RestController
     public function actionUpdate($companyId, $categoryId = null)
     {
         $company = Company::findOne($companyId);
-
         if ($company === null) {
             $company = Company::createByBx24Id($companyId);
         }

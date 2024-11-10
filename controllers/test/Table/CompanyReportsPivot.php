@@ -2,7 +2,6 @@
 
 namespace app\models;
 
-
 use Bitrix24\B24Object;
 use wm\b24tools\b24Tools;
 use Yii;
@@ -52,7 +51,6 @@ class CompanyReportsPivot extends \yii\base\Model
             $companyReportModels = CompanyReportsPivot::getDataWithFilterEmployee($this->employeId[0][value], $companyReportModels);
         }
         return CompanyReportsPivot::getData($companyReportModels);
-
     }
 
     public static function getData($modelsCompanyReport)
@@ -76,8 +74,6 @@ class CompanyReportsPivot extends \yii\base\Model
             $data[$companyId] = $row;
         }
         foreach ($modelsCompanyReport as $modelCompanyReport) {
-
-
             if (in_array($modelCompanyReport->user->id, $bx24NotActiveUsersIds)) {//TODO
                 $companiesWithNotActiveUsers[] = $modelCompanyReport->company->id;
             }

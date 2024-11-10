@@ -11,9 +11,11 @@ use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
 
+/**
+ *
+ */
 class MasterController extends Controller
 {
-
     /**
      * @return mixed[]
      */
@@ -111,6 +113,10 @@ class MasterController extends Controller
         return $this->goHome();
     }
 
+    /**
+     * @param $continue
+     * @return string|void
+     */
     public function actionStart($continue = false)
     {
         $model = new Master();
@@ -143,14 +149,16 @@ class MasterController extends Controller
             return $this->render('start3');
         }
         if ($arrData['page'] == 'continue') {
-            return $this->render('continue',
+            return $this->render(
+                'continue',
                 [
                     'master_id' => $arrData['master_id'],
                 ]
             );
         }
         if ($arrData['page'] == 9) {
-            return $this->render('page9',
+            return $this->render(
+                'page9',
                 [
                     'master_id' => $arrData['master_id'],
                 ]
@@ -161,6 +169,11 @@ class MasterController extends Controller
         }
     }
 
+    /**
+     * @param $product_id
+     * @param $master_id
+     * @return Response
+     */
     public function actionEndWorkingDay($product_id = null, $master_id = null)
     {
         Yii::warning($product_id, 'actionEndWorkingDay_$product_id');
@@ -171,11 +184,16 @@ class MasterController extends Controller
         return $this->goHome();
     }
 
+    /**
+     * @param $product_id
+     * @return string
+     */
     public function actionReturnProduct($product_id)
     {
         $model = new Master();
         $arrData = $model->returnProduct($product_id);
-        return $this->render('start1',
+        return $this->render(
+            'start1',
             [
                 'master_id' => $arrData['master_id'],
             ]
@@ -190,11 +208,16 @@ class MasterController extends Controller
 //        return $this->goHome();
     }
 
+    /**
+     * @param $product_id
+     * @return string
+     */
     public function actionTechnologicalPauseStart($product_id)
     {
         $model = new Master();
         $arrData = $model->technologicalPauseStart($product_id);
-        return $this->render('technologicalPause',
+        return $this->render(
+            'technologicalPause',
             [
                 'product_name' => $arrData['product_name'],
                 'product_id' => $arrData['product_id'],
@@ -202,11 +225,16 @@ class MasterController extends Controller
         );
     }
 
+    /**
+     * @param $product_id
+     * @return string
+     */
     public function actionTechnologicalPauseEnd($product_id)
     {
         $model = new Master();
         $arrData = $model->technologicalPauseEnd($product_id);
-        return $this->render('main',
+        return $this->render(
+            'main',
             [
                 'product_name' => $arrData['product_name'],
                 'product_id' => $arrData['product_id'],
@@ -214,11 +242,16 @@ class MasterController extends Controller
         );
     }
 
+    /**
+     * @param $product_id
+     * @return string
+     */
     public function actionDone($product_id)
     {
         $model = new Master();
         $arrData = $model->done($product_id);
-        return $this->render('start1',
+        return $this->render(
+            'start1',
             [
                 'master_id' => $arrData['master_id'],
             ]

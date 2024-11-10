@@ -1,11 +1,9 @@
 <?php
 
-
 namespace app\controllers\test\ex;
 
 class AddexController extends \wm\admin\controllers\RestController
 {
-
     public function actionDisk_folder_get()
     {
         $component = new \wm\b24tools\b24Tools();
@@ -39,14 +37,12 @@ class AddexController extends \wm\admin\controllers\RestController
             'disk.folder.uploadfile',
             [
                 'id' => '90', //ID папки
-//                'data'=>['NAME'=>'W1.docx'], // Имя файла которое добавляем
-                'data'=>['NAME'=>'Ex1.xlsx'], // Имя файла которое добавляем
-//                'fileContent'=>['W1.docx',$newfile], //Файл в формате base64
-                'fileContent'=>$newfile, //Файл в формате base64
+            //                'data'=>['NAME'=>'W1.docx'], // Имя файла которое добавляем
+                'data' => ['NAME' => 'Ex1.xlsx'], // Имя файла которое добавляем
+            //                'fileContent'=>['W1.docx',$newfile], //Файл в формате base64
+                'fileContent' => $newfile, //Файл в формате base64
             ]
         );
         return $answerB24;
     }
-
-
 }

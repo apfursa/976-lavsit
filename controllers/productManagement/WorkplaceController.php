@@ -18,9 +18,12 @@ use app\models\LoginForm;
 use app\models\ContactForm;
 
 // Рабочее место сотрудника
+
+/**
+ *
+ */
 class WorkplaceController extends Controller
 {
-
     /**
      * @return mixed[]
      */
@@ -109,13 +112,31 @@ class WorkplaceController extends Controller
         return $this->goHome();
     }
 
+    /**
+     * @return string|void
+     * @throws \Bitrix24\Exceptions\Bitrix24ApiException
+     * @throws \Bitrix24\Exceptions\Bitrix24EmptyResponseException
+     * @throws \Bitrix24\Exceptions\Bitrix24Exception
+     * @throws \Bitrix24\Exceptions\Bitrix24IoException
+     * @throws \Bitrix24\Exceptions\Bitrix24MethodNotFoundException
+     * @throws \Bitrix24\Exceptions\Bitrix24PaymentRequiredException
+     * @throws \Bitrix24\Exceptions\Bitrix24PortalDeletedException
+     * @throws \Bitrix24\Exceptions\Bitrix24PortalRenamedException
+     * @throws \Bitrix24\Exceptions\Bitrix24SecurityException
+     * @throws \Bitrix24\Exceptions\Bitrix24TokenIsExpiredException
+     * @throws \Bitrix24\Exceptions\Bitrix24TokenIsInvalidException
+     * @throws \Bitrix24\Exceptions\Bitrix24WrongClientException
+     * @throws \yii\base\Exception
+     * @throws \yii\base\InvalidRouteException
+     * @throws \yii\db\Exception
+     */
     public function actionStart()
     {
         $usersId = Yii::$app->user->id;
         $master = Master3::getMasterByUserId($usersId);
         $typeOfCompletion = WorkingHours::howWorkingDayCompleted($master);
         if ($typeOfCompletion == 'completed automatically') {
-            Yii::$app->response->redirect('https://test.mysmartautomation.ru/productManagement/working-hours/change-end-time-of-working-day');
+            Yii::$app->response->redirect('https://sof.lavsit.ru/productManagement/working-hours/change-end-time-of-working-day');
         }
         if ($typeOfCompletion == 'no entry' || $typeOfCompletion == 'completed by the user' || $typeOfCompletion == 'fixed by user') {
             WorkingHours::add($master);
@@ -125,7 +146,7 @@ class WorkplaceController extends Controller
             ];
             $historys = HistoryProduct::list($filterHistoryProduct, $orderHistoryProduct);
             if ($historys != []) {
-                if ($historys[1]) {
+                if ($historys[1] != []) {
                     $history = $historys[1]; // предпоследняя запись
                     // поставил на технологическую паузу
                     if ($history->operationId == 914) {
@@ -141,7 +162,8 @@ class WorkplaceController extends Controller
                             'ufCrm16Srochnost' => $product->getHistoryPriorityId(), // срочность
                             'parentId187' => $product->id,
                             'ufCrm16Operation' => 906, // начало рабочего дня
-                            'ufCrm16Uchastok' => $historyProductUchastok // участок
+                            'ufCrm16Uchastok' => $historyProductUchastok, // участок
+                            'ufCrm16Dateandtime' => date('d-m-Y H:i:s'), // дата и время
                         ];
                         HistoryProduct::add($historyFields);
                         return $this->render(
@@ -153,7 +175,6 @@ class WorkplaceController extends Controller
                         );
                     }
                 }
-
             }
             $products = Product::getProductsWithStatusInWork($master);
             if (count($products) > 1) {
@@ -177,17 +198,20 @@ class WorkplaceController extends Controller
                     'ufCrm16Srochnost' => $product->getHistoryPriorityId(), // срочность
                     'parentId187' => $product->id,
                     'ufCrm16Operation' => 906, // начало рабочего дня
-                    'ufCrm16Uchastok' => $historyProductUchastok // участок
+                    'ufCrm16Uchastok' => $historyProductUchastok, // участок
+                    'ufCrm16Dateandtime' => date('d-m-Y H:i:s'), // дата и время
                 ];
                 HistoryProduct::add($historyFields);
 //                $latestProductHistory = HistoryProduct::getLatestProductHistory($product);
+                $deadline = date('d-m-Y', strtotime($product->deadline));
                 return $this->render(
                     'main',
                     [
                         'product_name' => $product->title,
                         'product_id' => $product->id,
-                        'link' => $product->link
-//                    'master_id' => $master['id'],
+                        'link' => $product->link,
+                        'deadline' => $deadline
+                    //                    'master_id' => $master['id'],
                     ]
                 );
             }
@@ -213,6 +237,14 @@ class WorkplaceController extends Controller
             if ($products == []) {
                 $productFilter = [
                     'ufCrm8_1705585967731' => 754, // Срочность *
+                    'ufCrm8Master' => $master['id'],
+                    'ufCrm8Status' => 900, // в очереди
+                ];
+                $products = Product::list($productFilter, $productOrder);
+            }
+            if ($products == []) {
+                $productFilter = [
+                    'ufCrm8_1705585967731' => null, // Срочность null
                     'ufCrm8Master' => $master['id'],
                     'ufCrm8Status' => 900, // в очереди
                 ];
@@ -247,6 +279,14 @@ class WorkplaceController extends Controller
                 ];
                 $products = Product::list($productFilter, $productOrder);
             }
+            if ($products == []) {
+                $productFilter = [
+                    'ufCrm8_1705585967731' => null, // Срочность null
+                    'ufCrm8Status' => 896, // на складе
+                    'stageId' => $stageId, // стадия/участок
+                ];
+                $products = Product::list($productFilter, $productOrder);
+            }
             if (count($products) == 0) {
                 return $this->render(
                     'noProduct',
@@ -274,17 +314,19 @@ class WorkplaceController extends Controller
                     'ufCrm16Srochnost' => $product->getHistoryPriorityId(), // срочность
                     'parentId187' => $product->id,
                     'ufCrm16Operation' => 906, // начало рабочего дня
-                    'ufCrm16Uchastok' => $historyProductUchastok // участок
+                    'ufCrm16Uchastok' => $historyProductUchastok, // участок
+                    'ufCrm16Dateandtime' => date('d-m-Y H:i:s'), // дата и время
                 ];
                 HistoryProduct::add($historyFields);
-
+                $deadline = date('d-m-Y', strtotime($product->deadline));
                 return $this->render(
                     'main',
                     [
                         'product_name' => $product->title,
                         'product_id' => $product->id,
-                        'link' => $product->link
-//                    'master_id' => $product->masterId
+                        'link' => $product->link,
+                        'deadline' => $deadline
+                    //                    'master_id' => $product->masterId
                     ]
                 );
             }
@@ -312,16 +354,17 @@ class WorkplaceController extends Controller
                 }
                 // в работе
                 if ($history->statusId == 882) {
+                    $deadline = date('d-m-Y', strtotime($product->deadline));
                     return $this->render(
                         'main',
                         [
                             'product_name' => $product->title,
                             'product_id' => $product->id,
-                            'link' => $product->link
+                            'link' => $product->link,
+                            'deadline' => $deadline
                         ]
                     );
                 }
-
             }
             // поставил на технологическую паузу
             if ($history->operationId == 914) {
@@ -340,12 +383,14 @@ class WorkplaceController extends Controller
             // снял с технологической паузы
             if ($history->operationId == 916) {
                 $product = Product::get($history->productId);
+                $deadline = date('d-m-Y', strtotime($product->deadline));
                 return $this->render(
                     'main',
                     [
                         'product_name' => $product->title,
                         'product_id' => $product->id,
-                        'link' => $product->link
+                        'link' => $product->link,
+                        'deadline' => $deadline
                     ]
                 );
             }
@@ -363,24 +408,28 @@ class WorkplaceController extends Controller
             // снял с паузы
             if ($history->operationId == 912) {
                 $product = Product::get($history->productId);
+                $deadline = date('d-m-Y', strtotime($product->deadline));
                 return $this->render(
                     'main',
                     [
                         'product_name' => $product->title,
                         'product_id' => $product->id,
-                        'link' => $product->link
+                        'link' => $product->link,
+                        'deadline' => $deadline
                     ]
                 );
             }
             // взял в работу
             if ($history->operationId == 922) {
                 $product = Product::get($history->productId);
+                $deadline = date('d-m-Y', strtotime($product->deadline));
                 return $this->render(
                     'main',
                     [
                         'product_name' => $product->title,
                         'product_id' => $product->id,
-                        'link' => $product->link
+                        'link' => $product->link,
+                        'deadline' => $deadline
                     ]
                 );
             }
@@ -407,16 +456,19 @@ class WorkplaceController extends Controller
                 'ufCrm16Srochnost' => $product->getHistoryPriorityId(), // срочность
                 'parentId187' => $product->id,
                 'ufCrm16Operation' => 922, // взял в работу
-                'ufCrm16Uchastok' => $historyProductUchastok // участок
+                'ufCrm16Uchastok' => $historyProductUchastok, // участок
+                'ufCrm16Dateandtime' => date('d-m-Y H:i:s'), // дата и время
             ];
             HistoryProduct::add($historyFields);
+            $deadline = date('d-m-Y', strtotime($product->deadline));
             return $this->render(
                 'main',
                 [
                     'product_name' => $product->title,
                     'product_id' => $product->id,
-                    'link' => $product->link
-//                    'master_id' => $master['id'],
+                    'link' => $product->link,
+                    'deadline' => $deadline
+                //                    'master_id' => $master['id'],
                 ]
             );
         }
@@ -519,22 +571,42 @@ class WorkplaceController extends Controller
                 'ufCrm16Srochnost' => $product->getHistoryPriorityId(), // срочность
                 'parentId187' => $product->id,
                 'ufCrm16Operation' => 922, // взял в работу
-                'ufCrm16Uchastok' => $historyProductUchastok // участок
+                'ufCrm16Uchastok' => $historyProductUchastok, // участок
+                'ufCrm16Dateandtime' => date('d-m-Y H:i:s'), // дата и время
             ];
             HistoryProduct::add($historyFields);
-
+            $deadline = date('d-m-Y', strtotime($product->deadline));
             return $this->render(
                 'main',
                 [
                     'product_name' => $product->title,
                     'product_id' => $product->id,
-                    'link' => $product->link
-//                    'master_id' => $product->masterId
+                    'link' => $product->link,
+                    'deadline' => $deadline
+                //                    'master_id' => $product->masterId
                 ]
             );
         }
     }
 
+    /**
+     * @return void
+     * @throws \Bitrix24\Exceptions\Bitrix24ApiException
+     * @throws \Bitrix24\Exceptions\Bitrix24EmptyResponseException
+     * @throws \Bitrix24\Exceptions\Bitrix24Exception
+     * @throws \Bitrix24\Exceptions\Bitrix24IoException
+     * @throws \Bitrix24\Exceptions\Bitrix24MethodNotFoundException
+     * @throws \Bitrix24\Exceptions\Bitrix24PaymentRequiredException
+     * @throws \Bitrix24\Exceptions\Bitrix24PortalDeletedException
+     * @throws \Bitrix24\Exceptions\Bitrix24PortalRenamedException
+     * @throws \Bitrix24\Exceptions\Bitrix24SecurityException
+     * @throws \Bitrix24\Exceptions\Bitrix24TokenIsExpiredException
+     * @throws \Bitrix24\Exceptions\Bitrix24TokenIsInvalidException
+     * @throws \Bitrix24\Exceptions\Bitrix24WrongClientException
+     * @throws \yii\base\Exception
+     * @throws \yii\base\InvalidRouteException
+     * @throws \yii\db\Exception
+     */
     public function actionTakeFollowingProduct()
     {
         $usersId = Yii::$app->user->id;
@@ -542,7 +614,7 @@ class WorkplaceController extends Controller
         $orderHistoryProduct = ['id' => 'DESC']; // В порядке убывания
         $filterHistoryProduct = [
             'ufCrm16Master' => $master['id'],
-        ];
+        ];//
         $historys = HistoryProduct::list($filterHistoryProduct, $orderHistoryProduct);
 
         if ($historys != []) {
@@ -551,7 +623,7 @@ class WorkplaceController extends Controller
                 'ufCrm16Status' => 880 // на складе
             ];
             HistoryProduct::update($history->id, $fieldsHistory);
-            Yii::$app->response->redirect('https://test.mysmartautomation.ru/productManagement/workplace/start');
+            Yii::$app->response->redirect('https://sof.lavsit.ru/productManagement/workplace/start');
         }
     }
 }

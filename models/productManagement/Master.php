@@ -165,8 +165,6 @@ class Master extends Model
             )['result']['items'][0];
             // Если статус последней записи == "технологическая пауза"
             if ($history['ufCrm16Status'] == 886) {
-
-
                 $component = new \wm\b24tools\b24Tools();
                 $b24App = $component->connectFromAdmin();
                 $obB24 = new \Bitrix24\B24Object($b24App);
@@ -422,7 +420,6 @@ class Master extends Model
                     ];
                 }
             }
-
         }
         if ($otvet == 'continue') {
             return [
@@ -435,7 +432,6 @@ class Master extends Model
                 'page' => 10
             ];
         }
-
     }
 
     public function getMasterByUserId($usersId)
@@ -502,7 +498,6 @@ class Master extends Model
             } else {
                 return 'continue';
             }
-
         }
     }
 
@@ -553,8 +548,6 @@ class Master extends Model
         if ($master_id) {
             $this->updateEntryToSpUchetRabochegoVremeny($master_id);
         }
-
-
     }
 
     public function returnProduct($product_id)
@@ -604,7 +597,7 @@ class Master extends Model
                 'fields' => [
                     'ufCrm8Master' => '',
                     'ufCrm8Status' => 896, // на складе
-//                    'stageId' => $previousStage // Перевод изделия на предыдущую стадию / на предыдущий участок
+            //                    'stageId' => $previousStage // Перевод изделия на предыдущую стадию / на предыдущий участок
                 ]
             ]
         );
@@ -629,7 +622,6 @@ class Master extends Model
         return [
             'master_id' => $product['ufCrm8Master']
         ];
-
     }
 
     public function technologicalPauseStart($product_id)
@@ -660,9 +652,9 @@ class Master extends Model
                 'entityTypeId' => 187, //СП Производство
                 'id' => $product_id,
                 'fields' => [
-//                    'ufCrm8Master' => '',
+            //                    'ufCrm8Master' => '',
                     'ufCrm8Status' => 902, // технологическая пауза
-//                    'stageId' => $previousStage // Перевод изделия на предыдущую стадию / на предыдущий участок
+            //                    'stageId' => $previousStage // Перевод изделия на предыдущую стадию / на предыдущий участок
                 ]
             ]
         );
@@ -718,9 +710,9 @@ class Master extends Model
                 'entityTypeId' => 187, //СП Производство
                 'id' => $product_id,
                 'fields' => [
-//                    'ufCrm8Master' => '',
+            //                    'ufCrm8Master' => '',
                     'ufCrm8Status' => 898, // в работе
-//                    'stageId' => $previousStage // Перевод изделия на предыдущую стадию / на предыдущий участок
+            //                    'stageId' => $previousStage // Перевод изделия на предыдущую стадию / на предыдущий участок
                 ]
             ]
         );
@@ -779,7 +771,7 @@ class Master extends Model
                 'fields' => [
                     'ufCrm8Master' => '',
                     'ufCrm8Status' => 896, // на складе
-//                    'stageId' => $nextStage // Перевод изделия на следующую стадию / на следующий участок
+            //                    'stageId' => $nextStage // Перевод изделия на следующую стадию / на следующий участок
                 ]
             ]
         );
@@ -804,7 +796,6 @@ class Master extends Model
         return [
             'master_id' => $product['ufCrm8Master']
         ];
-
     }
 
     public function updateEntryToSpUchetRabochegoVremeny($masterId)
@@ -858,7 +849,7 @@ class Master extends Model
                     'ufCrm18Master' => $arrData['masterId'],
                     'ufCrm18PrishelDate' => $arrData['date'],
                     'ufCrm18PrishelTime' => $arrData['time'],
-//                    'ufCrm18Uchastok' => $arrData['masterWorkshop'] // нужно переделывать тип поля в СП
+            //                    'ufCrm18Uchastok' => $arrData['masterWorkshop'] // нужно переделывать тип поля в СП
                 ]
             ]
         );

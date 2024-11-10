@@ -21,7 +21,7 @@ $this->title = 'My Yii Application';
         <div class="col-md-3">
             <div class="d-grid gap-2">
                 <input type="button" class="btn btn-success" value="Выполнить повторный запрос"
-                       onclick="window.location='https://test.mysmartautomation.ru/productManagement/workplace/start'">
+                       onclick="window.location='https://sof.lavsit.ru/productManagement/workplace/start'">
 
                 <button type="button" class="btn btn-info" data-toggle="modal" data-target="#endWorkingDayModal">
                     Завершить рабочий день
@@ -54,7 +54,7 @@ $this->title = 'My Yii Application';
     $(document).ready(function () {
         console.log('59')
         $('#endWorkingDay').click(function () {
-            location.href = 'https://test.mysmartautomation.ru/productManagement/working-hours/end-working-day?product_id=<?php echo $product_id; ?>'
+            location.href = 'https://sof.lavsit.ru/productManagement/working-hours/end-working-day?product_id=<?php echo $product_id; ?>'
             $('#endWorkingDayModal').modal('hide');
         });
     });

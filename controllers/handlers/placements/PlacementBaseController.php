@@ -11,10 +11,19 @@ use yii\web\Controller;
 use Bitrix24\User\User as B24User;
 use wm\admin\models\User;
 
+/**
+ *
+ */
 class PlacementBaseController extends Controller
 {
+    /**
+     * @var null
+     */
     protected $accessToken = null;
 
+    /**
+     * @var string
+     */
     public $layout = '@app/views/layouts/app.php';
 
 //    public function behaviors() {
@@ -29,6 +38,14 @@ class PlacementBaseController extends Controller
 //        ];
 //    }
 
+    /**
+     * @param $action
+     * @return bool
+     * @throws HttpException
+     * @throws \yii\base\Exception
+     * @throws \yii\db\Exception
+     * @throws \yii\web\BadRequestHttpException
+     */
     public function beforeAction($action)
     {
         $this->enableCsrfValidation = false;

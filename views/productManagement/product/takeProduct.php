@@ -10,7 +10,7 @@ $this->title = 'My Yii Application';
         </div>
         <div class="col-md-3">
             <div class="d-grid gap-2">
-                <a class="btn btn-primary" href="https://test.mysmartautomation.ru/productManagement/workplace/start"
+                <a class="btn btn-primary" href="https://sof.lavsit.ru/productManagement/workplace/start"
                    role="button">Взять изделие в работу</a>
 
 <!--                <input type="button" value="Взять изделие в работу"-->
@@ -46,7 +46,7 @@ $this->title = 'My Yii Application';
     $(document).ready(function () {
         console.log('59')
         $('#endWorkingDay').click(function () {
-            location.href = 'https://test.mysmartautomation.ru/productManagement/working-hours/end-working-day?product_id=<?php echo $product_id; ?>'
+            location.href = 'https://sof.lavsit.ru/productManagement/working-hours/end-working-day?master_id=<?php echo $master_id; ?>'
             $('#endWorkingDayModal').modal('hide');
         });
     });

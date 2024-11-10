@@ -21,7 +21,7 @@ $this->title = 'My Yii Application';
 <!--                <input type="button" value="Ссылка"-->
 <!--                       onclick="window.location='#'">-->
 
-                <a class="btn btn-success" href="https://test.mysmartautomation.ru/productManagement/product/end-technological-pause?product_id=<?php echo $product_id; ?>"
+                <a class="btn btn-success" href="https://sof.lavsit.ru/productManagement/product/end-technological-pause?product_id=<?php echo $product_id; ?>"
                    role="button">Продолжить</a>
 <!--                <input type="button" value="Продолжить"-->
 <!--                       onclick="window.location='https://test.mysmartautomation.ru/productManagement/product/end-technological-pause?product_id=--><?php //echo $product_id; ?><!--'">-->
@@ -76,7 +76,7 @@ $this->title = 'My Yii Application';
     $(document).ready(function () {
         console.log('59')
         $('#takeFollowingProduct').click(function () {
-            location.href = 'https://test.mysmartautomation.ru/productManagement/workplace/take-following-product'
+            location.href = 'https://sof.lavsit.ru/productManagement/workplace/take-following-product'
             $('#takeFollowingProductModal').modal('hide');
         });
     });
@@ -86,7 +86,7 @@ $this->title = 'My Yii Application';
     $(document).ready(function () {
         console.log('59')
         $('#endWorkingDay').click(function () {
-            location.href = 'https://test.mysmartautomation.ru/productManagement/working-hours/end-working-day?product_id=<?php echo $product_id; ?>'
+            location.href = 'https://sof.lavsit.ru/productManagement/working-hours/end-working-day?product_id=<?php echo $product_id; ?>'
             $('#endWorkingDayModal').modal('hide');
         });
     });

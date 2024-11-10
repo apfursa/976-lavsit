@@ -9,7 +9,6 @@ use yii\helpers\Url;
 
 class ReportCompanyController extends ActiveRestController
 {
-
     public $modelClass = ReportCompany::class;
     public $modelClassSearch = ReportCompanySearch::class;
 
@@ -56,5 +55,4 @@ class ReportCompanyController extends ActiveRestController
             ],
         ];
     }
-
 }

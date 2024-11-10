@@ -9,10 +9,8 @@ use yii\rest\Controller;
 use yii\helpers\Url;
 use Yii;
 
-
 class WebhookController extends Controller
 {
-
     // https://webmens3.bitrix24.ru/devops/edit/out-hook/20/
     public function actionTest()
     {
@@ -101,7 +99,7 @@ class WebhookController extends Controller
         $method = "crm.deal.delete";
         $userId = '6';
         $arrayQuery = [
-            "userId" 	 => $userId,
+            "userId"     => $userId,
         ];
 //        $ch = curl_init('https://webmens3.bitrix24.ru/rest/' . $userId . '/' . $token . '/' . $method . '?id=118');
         $ch = curl_init('https://webmens3.bitrix24.ru/rest/6/s99zay0e14yfmi0s/crm.deal.get?id=116');
@@ -113,6 +111,4 @@ class WebhookController extends Controller
         curl_close($ch);
         return json_decode($res);
     }
-
-
 }

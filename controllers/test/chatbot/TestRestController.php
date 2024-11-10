@@ -106,7 +106,8 @@ class TestRestController extends RestController
                 ],
                 function ($result) use (&$res) {
                     $res = array_merge($res, $result['result']);
-                });
+                }
+            );
         }
         $obB24->client->processBatchCalls();
         foreach ($res as $oneEntity) {
@@ -136,11 +137,11 @@ class TestRestController extends RestController
     }
     public function actionTestarr()
     {
-       $a = [2,23,4,56,34,5,87,86,88,89,12,13,14,15,16,17,18,19,20,21,22,24,25,26,27,28,29,30,31,32,33];
-       sort($a);
-       $b = array_chunk($a,10);
+        $a = [2,23,4,56,34,5,87,86,88,89,12,13,14,15,16,17,18,19,20,21,22,24,25,26,27,28,29,30,31,32,33];
+        sort($a);
+        $b = array_chunk($a, 10);
 
-       return $b;
+        return $b;
     }
 
     public function actionIsset1()
@@ -193,10 +194,10 @@ class TestRestController extends RestController
     public function actionSwitch($id)
     {
         switch ($id) {
-            case('1'):
+            case ('1'):
                 $result = '1+1';
                 break;
-            case('2'):
+            case ('2'):
                 $result = '2+2';
                 break;
             default:
@@ -254,7 +255,9 @@ class TestRestController extends RestController
             $b = $b + $i * 2;
         }
 
-        for ($i = 3; $i < 12; $i++) $c = $c + $i * 2;
+        for ($i = 3; $i < 12; $i++) {
+            $c = $c + $i * 2;
+        }
 
 //        foreach ($m as $v) {
 //            $temp[] = $v == null ? 300 : 50;
@@ -262,7 +265,11 @@ class TestRestController extends RestController
 
 //        foreach ($m as $v) $temp[] = $v == null ? 300 : 50;
 
-        foreach ($m as $v) if ($v != null) $temp[] = $v;
+        foreach ($m as $v) {
+            if ($v != null) {
+                $temp[] = $v;
+            }
+        }
 
         return $temp;
     }
@@ -417,6 +424,4 @@ class TestRestController extends RestController
         );
         return $answerB24;
     }
-
-
 }

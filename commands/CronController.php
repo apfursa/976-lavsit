@@ -41,6 +41,8 @@ class CronController extends Controller
 
     public function actionAgentsRun()
     {
+        $date = date('Y-m-d H:i:s');
+        Yii::warning($date, '$date');
         Agents::shedulRun();
         return ExitCode::OK;
     }

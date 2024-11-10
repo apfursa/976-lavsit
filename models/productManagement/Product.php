@@ -2,6 +2,19 @@
 
 namespace app\models\productManagement;
 
+use Bitrix24\Exceptions\Bitrix24ApiException;
+use Bitrix24\Exceptions\Bitrix24EmptyResponseException;
+use Bitrix24\Exceptions\Bitrix24Exception;
+use Bitrix24\Exceptions\Bitrix24IoException;
+use Bitrix24\Exceptions\Bitrix24MethodNotFoundException;
+use Bitrix24\Exceptions\Bitrix24PaymentRequiredException;
+use Bitrix24\Exceptions\Bitrix24PortalDeletedException;
+use Bitrix24\Exceptions\Bitrix24PortalRenamedException;
+use Bitrix24\Exceptions\Bitrix24SecurityException;
+use Bitrix24\Exceptions\Bitrix24TokenIsExpiredException;
+use Bitrix24\Exceptions\Bitrix24TokenIsInvalidException;
+use Bitrix24\Exceptions\Bitrix24WrongClientException;
+use yii\base\Exception;
 use yii\helpers\ArrayHelper;
 use yii\base\Model;
 use Yii;
@@ -9,17 +22,18 @@ use Yii;
 // Изделие
 
 /**
- * @property int historyPriorityId
+ * @property int $historyPriorityId
  */
 class Product extends Model
+
 {
     /**
-     *
+     * @var int
      */
     public const ENTITY_TYPE_ID = 187;
 
     /**
-     *
+     * @var array<int, int>
      */
     public const PRIORITY_PRODUCT_HISTORY = [
         754 => 874,
@@ -27,55 +41,59 @@ class Product extends Model
         766 => 878
     ];
     /**
-     * @var
+     * @var int
      */
-    public $id;
+    public int $id;
     /**
-     * @var
+     * @var string
      */
-    public $title;
+    public string $title;
     /**
-     * @var
+     * @var string
      */
-    public $stageId;
+    public string $stageId;
     /**
-     * @var
+     * @var int
      */
-    public $masterId;
+    public int $masterId;
     /**
-     * @var
+     * @var string
      */
-    public $statusId;
+    public string $statusId;
     /**
-     * @var
+     * @var string
      */
-    public $priorityId;
+    public string $priorityId;
     /**
-     * @var
+     * @var string
      */
-    public $deadline;
-
-    public $link;
+    public string $deadline;
 
     /**
-     * @param $id
+     * @var string
+     */
+    public string $link;
+
+    /**
+     * @param int $id
      * @return Product
-     * @throws \Bitrix24\Exceptions\Bitrix24ApiException
-     * @throws \Bitrix24\Exceptions\Bitrix24EmptyResponseException
-     * @throws \Bitrix24\Exceptions\Bitrix24Exception
-     * @throws \Bitrix24\Exceptions\Bitrix24IoException
-     * @throws \Bitrix24\Exceptions\Bitrix24MethodNotFoundException
-     * @throws \Bitrix24\Exceptions\Bitrix24PaymentRequiredException
-     * @throws \Bitrix24\Exceptions\Bitrix24PortalDeletedException
-     * @throws \Bitrix24\Exceptions\Bitrix24PortalRenamedException
-     * @throws \Bitrix24\Exceptions\Bitrix24SecurityException
-     * @throws \Bitrix24\Exceptions\Bitrix24TokenIsExpiredException
-     * @throws \Bitrix24\Exceptions\Bitrix24TokenIsInvalidException
-     * @throws \Bitrix24\Exceptions\Bitrix24WrongClientException
-     * @throws \yii\base\Exception
+     * @throws Bitrix24ApiException
+     * @throws Bitrix24EmptyResponseException
+     * @throws Bitrix24Exception
+     * @throws Bitrix24IoException
+     * @throws Bitrix24MethodNotFoundException
+     * @throws Bitrix24PaymentRequiredException
+     * @throws Bitrix24PortalDeletedException
+     * @throws Bitrix24PortalRenamedException
+     * @throws Bitrix24SecurityException
+     * @throws Bitrix24TokenIsExpiredException
+     * @throws Bitrix24TokenIsInvalidException
+     * @throws Bitrix24WrongClientException
+     * @throws Exception
      * @throws \yii\db\Exception
+     * @throws \Exception
      */
-    public static function get($id)
+    public static function get(int $id): Product
     {
         $component = new \wm\b24tools\b24Tools();
         $b24App = $component->connectFromAdmin();
@@ -91,25 +109,25 @@ class Product extends Model
     }
 
     /**
-     * @param $filter
-     * @param $order
+     * @param array<string, mixed> $filter
+     * @param array<string, mixed> $order
      * @return Product[]
-     * @throws \Bitrix24\Exceptions\Bitrix24ApiException
-     * @throws \Bitrix24\Exceptions\Bitrix24EmptyResponseException
-     * @throws \Bitrix24\Exceptions\Bitrix24Exception
-     * @throws \Bitrix24\Exceptions\Bitrix24IoException
-     * @throws \Bitrix24\Exceptions\Bitrix24MethodNotFoundException
-     * @throws \Bitrix24\Exceptions\Bitrix24PaymentRequiredException
-     * @throws \Bitrix24\Exceptions\Bitrix24PortalDeletedException
-     * @throws \Bitrix24\Exceptions\Bitrix24PortalRenamedException
-     * @throws \Bitrix24\Exceptions\Bitrix24SecurityException
-     * @throws \Bitrix24\Exceptions\Bitrix24TokenIsExpiredException
-     * @throws \Bitrix24\Exceptions\Bitrix24TokenIsInvalidException
-     * @throws \Bitrix24\Exceptions\Bitrix24WrongClientException
-     * @throws \yii\base\Exception
+     * @throws Bitrix24ApiException
+     * @throws Bitrix24EmptyResponseException
+     * @throws Bitrix24Exception
+     * @throws Bitrix24IoException
+     * @throws Bitrix24MethodNotFoundException
+     * @throws Bitrix24PaymentRequiredException
+     * @throws Bitrix24PortalDeletedException
+     * @throws Bitrix24PortalRenamedException
+     * @throws Bitrix24SecurityException
+     * @throws Bitrix24TokenIsExpiredException
+     * @throws Bitrix24TokenIsInvalidException
+     * @throws Bitrix24WrongClientException
+     * @throws Exception
      * @throws \yii\db\Exception
      */
-    public static function list($filter = [], $order = [])
+    public static function list(array $filter = [], array $order = []): array
     {
         $component = new \wm\b24tools\b24Tools();
         $b24App = $component->connectFromAdmin();
@@ -130,11 +148,11 @@ class Product extends Model
     }
 
     /**
-     * @param $id
-     * @param $fields
+     * @param int $id
+     * @param array<string, mixed> $fields
      * @return void
      */
-    public static function update($id, $fields)
+    public static function update(int $id, array $fields)
     {
         $component = new \wm\b24tools\b24Tools();
         $b24App = $component->connectFromAdmin();
@@ -150,11 +168,11 @@ class Product extends Model
     }
 
     /**
-     * @param $arr
+     * @param array<string, mixed> $arr
      * @return Product
      * @throws \Exception
      */
-    private static function b24ToObject($arr)
+    private static function b24ToObject(array $arr): Product
     {
         $model = new Product();
         $model->id = ArrayHelper::getValue($arr, 'id');
@@ -172,6 +190,7 @@ class Product extends Model
      * @param $model
      * @return array
      */
+    /*
     private function objectToB24($model)
     {
         $arr = [
@@ -185,16 +204,35 @@ class Product extends Model
         ];
         return $arr;
     }
+    */
 
     /**
      * @return int
      */
-    public function getHistoryPriorityId()
+    public function getHistoryPriorityId(): int
     {
         return ArrayHelper::getValue(self::PRIORITY_PRODUCT_HISTORY, $this->priorityId);
     }
 
-    public static function getProductsWithStatusInWork($master)
+    /**
+     * @param array<string, mixed> $master
+     * @return Product[]
+     * @throws Bitrix24ApiException
+     * @throws Bitrix24EmptyResponseException
+     * @throws Bitrix24Exception
+     * @throws Bitrix24IoException
+     * @throws Bitrix24MethodNotFoundException
+     * @throws Bitrix24PaymentRequiredException
+     * @throws Bitrix24PortalDeletedException
+     * @throws Bitrix24PortalRenamedException
+     * @throws Bitrix24SecurityException
+     * @throws Bitrix24TokenIsExpiredException
+     * @throws Bitrix24TokenIsInvalidException
+     * @throws Bitrix24WrongClientException
+     * @throws Exception
+     * @throws \yii\db\Exception
+     */
+    public static function getProductsWithStatusInWork(array $master): array
     {
         $productFilter = [
             'ufCrm8Master' => $master['id'],
@@ -206,7 +244,25 @@ class Product extends Model
         return Product::list($productFilter, $productOrder);
     }
 
-    public static function done($product_id)
+    /**
+     * @param int $product_id
+     * @return void
+     * @throws Bitrix24ApiException
+     * @throws Bitrix24EmptyResponseException
+     * @throws Bitrix24Exception
+     * @throws Bitrix24IoException
+     * @throws Bitrix24MethodNotFoundException
+     * @throws Bitrix24PaymentRequiredException
+     * @throws Bitrix24PortalDeletedException
+     * @throws Bitrix24PortalRenamedException
+     * @throws Bitrix24SecurityException
+     * @throws Bitrix24TokenIsExpiredException
+     * @throws Bitrix24TokenIsInvalidException
+     * @throws Bitrix24WrongClientException
+     * @throws Exception
+     * @throws \yii\db\Exception
+     */
+    public static function done(int $product_id)
     {
         $product = self::get($product_id);
         $workshopId = (new \yii\db\Query())
@@ -228,7 +284,7 @@ class Product extends Model
         $fields = [
             'ufCrm8Master' => '',
             'ufCrm8Status' => 896, // на складе
-//                    'stageId' => $nextStage // Перевод изделия на следующую стадию / на следующий участок
+                    'stageId' => $nextStage // Перевод изделия на следующую стадию / на следующий участок
         ];
         self::update($product_id, $fields);
         $historyFields = [
@@ -237,12 +293,31 @@ class Product extends Model
             'ufCrm16Srochnost' => $product->getHistoryPriorityId(), // срочность
             'parentId187' => $product->id,
             'ufCrm16Operation' => 920, // перевел на следующий этап
-            'ufCrm16Uchastok' => $historyProductUchastok // участок
+            'ufCrm16Uchastok' => $historyProductUchastok, // участок
+            'ufCrm16Dateandtime' => date('d-m-Y H:i:s'), // дата и время
         ];
         HistoryProduct::add($historyFields);
     }
 
-    public static function returnProduct($product_id)
+    /**
+     * @param int $product_id
+     * @return void
+     * @throws Bitrix24ApiException
+     * @throws Bitrix24EmptyResponseException
+     * @throws Bitrix24Exception
+     * @throws Bitrix24IoException
+     * @throws Bitrix24MethodNotFoundException
+     * @throws Bitrix24PaymentRequiredException
+     * @throws Bitrix24PortalDeletedException
+     * @throws Bitrix24PortalRenamedException
+     * @throws Bitrix24SecurityException
+     * @throws Bitrix24TokenIsExpiredException
+     * @throws Bitrix24TokenIsInvalidException
+     * @throws Bitrix24WrongClientException
+     * @throws Exception
+     * @throws \yii\db\Exception
+     */
+    public static function returnProduct(int $product_id)
     {
         $product = self::get($product_id);
         $workshopId = (new \yii\db\Query())
@@ -264,7 +339,7 @@ class Product extends Model
         $fields = [
             'ufCrm8Master' => '',
             'ufCrm8Status' => 896, // на складе
-//                    'stageId' => $previousStage // Перевод изделия на предыдущую стадию / на предыдущий участок
+                    'stageId' => $previousStage // Перевод изделия на предыдущую стадию / на предыдущий участок
         ];
         self::update($product_id, $fields);
         $historyFields = [
@@ -273,12 +348,31 @@ class Product extends Model
             'ufCrm16Srochnost' => $product->getHistoryPriorityId(), // срочность
             'parentId187' => $product->id,
             'ufCrm16Operation' => 918, // вернул на предыдущий этап
-            'ufCrm16Uchastok' => $historyProductUchastok // участок
+            'ufCrm16Uchastok' => $historyProductUchastok, // участок
+            'ufCrm16Dateandtime' => date('d-m-Y H:i:s'), // дата и время
         ];
         HistoryProduct::add($historyFields);
     }
 
-    public static function startTechnologicalPause($product_id)
+    /**
+     * @param int $product_id
+     * @return Product
+     * @throws Bitrix24ApiException
+     * @throws Bitrix24EmptyResponseException
+     * @throws Bitrix24Exception
+     * @throws Bitrix24IoException
+     * @throws Bitrix24MethodNotFoundException
+     * @throws Bitrix24PaymentRequiredException
+     * @throws Bitrix24PortalDeletedException
+     * @throws Bitrix24PortalRenamedException
+     * @throws Bitrix24SecurityException
+     * @throws Bitrix24TokenIsExpiredException
+     * @throws Bitrix24TokenIsInvalidException
+     * @throws Bitrix24WrongClientException
+     * @throws Exception
+     * @throws \yii\db\Exception
+     */
+    public static function startTechnologicalPause(int $product_id): Product
     {
         $product = self::get($product_id);
         $historyProductUchastok = (new \yii\db\Query())
@@ -310,13 +404,32 @@ class Product extends Model
             'ufCrm16Srochnost' => $product->getHistoryPriorityId(), // срочность
             'parentId187' => $product->id,
             'ufCrm16Operation' => 914, // поставил на технологическую паузу
-            'ufCrm16Uchastok' => $historyProductUchastok // участок
+            'ufCrm16Uchastok' => $historyProductUchastok, // участок
+            'ufCrm16Dateandtime' => date('d-m-Y H:i:s'), // дата и время
         ];
         HistoryProduct::add($historyFields);
         return $product;
     }
 
-    public static function endTechnologicalPause($product_id)
+    /**
+     * @param int $product_id
+     * @return Product
+     * @throws Bitrix24ApiException
+     * @throws Bitrix24EmptyResponseException
+     * @throws Bitrix24Exception
+     * @throws Bitrix24IoException
+     * @throws Bitrix24MethodNotFoundException
+     * @throws Bitrix24PaymentRequiredException
+     * @throws Bitrix24PortalDeletedException
+     * @throws Bitrix24PortalRenamedException
+     * @throws Bitrix24SecurityException
+     * @throws Bitrix24TokenIsExpiredException
+     * @throws Bitrix24TokenIsInvalidException
+     * @throws Bitrix24WrongClientException
+     * @throws Exception
+     * @throws \yii\db\Exception
+     */
+    public static function endTechnologicalPause(int $product_id): Product
     {
         $product = self::get($product_id);
         $historyProductUchastok = (new \yii\db\Query())
@@ -349,13 +462,32 @@ class Product extends Model
             'ufCrm16Srochnost' => $product->getHistoryPriorityId(), // срочность
             'parentId187' => $product->id,
             'ufCrm16Operation' => 916, // снял с технологической паузы
-            'ufCrm16Uchastok' => $historyProductUchastok // участок
+            'ufCrm16Uchastok' => $historyProductUchastok, // участок
+            'ufCrm16Dateandtime' => date('d-m-Y H:i:s'), // дата и время
         ];
         HistoryProduct::add($historyFields);
         return $product;
     }
 
-    public static function startPause($product_id)
+    /**
+     * @param int $product_id
+     * @return Product
+     * @throws Bitrix24ApiException
+     * @throws Bitrix24EmptyResponseException
+     * @throws Bitrix24Exception
+     * @throws Bitrix24IoException
+     * @throws Bitrix24MethodNotFoundException
+     * @throws Bitrix24PaymentRequiredException
+     * @throws Bitrix24PortalDeletedException
+     * @throws Bitrix24PortalRenamedException
+     * @throws Bitrix24SecurityException
+     * @throws Bitrix24TokenIsExpiredException
+     * @throws Bitrix24TokenIsInvalidException
+     * @throws Bitrix24WrongClientException
+     * @throws Exception
+     * @throws \yii\db\Exception
+     */
+    public static function startPause(int $product_id): Product
     {
         $product = self::get($product_id);
         $historyProductUchastok = (new \yii\db\Query())
@@ -389,13 +521,32 @@ class Product extends Model
             'ufCrm16Srochnost' => $product->getHistoryPriorityId(), // срочность
             'parentId187' => $product->id,
             'ufCrm16Operation' => 910, // поставил на паузу
-            'ufCrm16Uchastok' => $historyProductUchastok // участок
+            'ufCrm16Uchastok' => $historyProductUchastok, // участок
+            'ufCrm16Dateandtime' => date('d-m-Y H:i:s'), // дата и время
         ];
         HistoryProduct::add($historyFields);
         return $product;
     }
 
-    public static function endPause($product_id)
+    /**
+     * @param int $product_id
+     * @return Product
+     * @throws Bitrix24ApiException
+     * @throws Bitrix24EmptyResponseException
+     * @throws Bitrix24Exception
+     * @throws Bitrix24IoException
+     * @throws Bitrix24MethodNotFoundException
+     * @throws Bitrix24PaymentRequiredException
+     * @throws Bitrix24PortalDeletedException
+     * @throws Bitrix24PortalRenamedException
+     * @throws Bitrix24SecurityException
+     * @throws Bitrix24TokenIsExpiredException
+     * @throws Bitrix24TokenIsInvalidException
+     * @throws Bitrix24WrongClientException
+     * @throws Exception
+     * @throws \yii\db\Exception
+     */
+    public static function endPause(int $product_id): Product
     {
         $product = self::get($product_id);
         $historyProductUchastok = (new \yii\db\Query())
@@ -427,10 +578,10 @@ class Product extends Model
             'ufCrm16Srochnost' => $product->getHistoryPriorityId(), // срочность
             'parentId187' => $product->id,
             'ufCrm16Operation' => 912, // снял с паузы
-            'ufCrm16Uchastok' => $historyProductUchastok // участок
+            'ufCrm16Uchastok' => $historyProductUchastok, // участок
+            'ufCrm16Dateandtime' => date('d-m-Y H:i:s'), // дата и время
         ];
         HistoryProduct::add($historyFields);
         return $product;
     }
-
 }

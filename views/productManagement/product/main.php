@@ -35,10 +35,19 @@ $this->title = 'My Yii Application';
                 <!--                    Пауза-->
                 <!--                </button>-->
                 <input type="button" value="Пауза"
-                       onclick="window.location='https://test.mysmartautomation.ru/productManagement/product/start-pause?product_id=<?php echo $product_id; ?>'">
+                       onclick="window.location='https://sof.lavsit.ru/productManagement/product/start-pause?product_id=<?php echo $product_id; ?>'">
 
                 <button type="button" class="btn btn-info" data-toggle="modal" data-target="#endWorkingDayModal">
                     Завершить рабочий день
+                </button>
+
+                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#endWorkingDayModal1">
+                    Завершить рабочий день
+                </button>
+
+
+                <button type="button" class="btn btn-info">
+                    <?php echo 'Дата готовности: ' . $deadline; ?>
                 </button>
                 <!--                <input type="button" value="Завершить рабочий день"-->
                 <!--                       onclick="window.location='https://test.mysmartautomation.ru/productManagement/working-hours/end-working-day?product_id=-->
@@ -130,7 +139,7 @@ $this->title = 'My Yii Application';
     $(document).ready(function () {
         console.log('59')
         $('#returnProduct').click(function () {
-            location.href = 'https://test.mysmartautomation.ru/productManagement/product/return-product?product_id=<?php echo $product_id; ?>'
+            location.href = 'https://sof.lavsit.ru/productManagement/product/return-product?product_id=<?php echo $product_id; ?>'
             $('#returnProductModal').modal('hide');
         });
     });
@@ -140,7 +149,7 @@ $this->title = 'My Yii Application';
     $(document).ready(function () {
         console.log('59')
         $('#done').click(function () {
-            location.href = 'https://test.mysmartautomation.ru/productManagement/product/done?product_id=<?php echo $product_id; ?>'
+            location.href = 'https://sof.lavsit.ru/productManagement/product/done?product_id=<?php echo $product_id; ?>'
             $('#doneModal').modal('hide');
         });
     });
@@ -150,7 +159,7 @@ $this->title = 'My Yii Application';
     $(document).ready(function () {
         console.log('59')
         $('#startTechnologicalPause').click(function () {
-            location.href = 'https://test.mysmartautomation.ru/productManagement/product/start-technological-pause?product_id=<?php echo $product_id; ?>'
+            location.href = 'https://sof.lavsit.ru/productManagement/product/start-technological-pause?product_id=<?php echo $product_id; ?>'
             $('#startTechnologicalPauseModal').modal('hide');
         });
     });
@@ -170,7 +179,7 @@ $this->title = 'My Yii Application';
     $(document).ready(function () {
         console.log('59')
         $('#endWorkingDay').click(function () {
-            location.href = 'https://test.mysmartautomation.ru/productManagement/working-hours/end-working-day?product_id=<?php echo $product_id; ?>'
+            location.href = 'https://sof.lavsit.ru/productManagement/working-hours/end-working-day?product_id=<?php echo $product_id; ?>'
             $('#endWorkingDayModal').modal('hide');
         });
     });

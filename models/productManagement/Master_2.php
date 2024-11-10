@@ -26,7 +26,7 @@ class Master_2 extends Model
 {
     public function start($continue = false)
     {
-        Yii::warning('Master_2','start_Master_2');
+        Yii::warning('Master_2', 'start_Master_2');
         $usersId = Yii::$app->user->id;
         $master = $this->getMasterByUserId($usersId);
         $masterId = $master['id'];
@@ -261,8 +261,6 @@ class Master_2 extends Model
             )['result']['items'][0];
             // Если статус последней записи == "технологическая пауза"
             if ($history['ufCrm16Status'] == 886) {
-
-
                 $component = new \wm\b24tools\b24Tools();
                 $b24App = $component->connectFromAdmin();
                 $obB24 = new \Bitrix24\B24Object($b24App);
@@ -518,7 +516,6 @@ class Master_2 extends Model
                     ];
                 }
             }
-
         }
         if ($otvet == 'continue') {
             return [
@@ -531,12 +528,11 @@ class Master_2 extends Model
                 'page' => 10
             ];
         }
-
     }
 
     public function getMasterByUserId($usersId)
     {
-        Yii::warning('Master_2','getMasterByUserId_Master_2');
+        Yii::warning('Master_2', 'getMasterByUserId_Master_2');
         $component = new \wm\b24tools\b24Tools();
         $b24App = $component->connectFromAdmin();
         $obB24 = new \Bitrix24\B24Object($b24App);
@@ -554,7 +550,7 @@ class Master_2 extends Model
     // Запись даты и времени начала работы в СП "Учет рабочего времени"
     public function uchetRabochegoVremeny($master, $continue = false)
     {
-        Yii::warning('Master_2','uchetRabochegoVremeny_Master_2');
+        Yii::warning('Master_2', 'uchetRabochegoVremeny_Master_2');
         $date = date('Y-m-d');
         $time = date('H:i:s');
         $arrData = [
@@ -600,13 +596,12 @@ class Master_2 extends Model
             } else {
                 return 'continue';
             }
-
         }
     }
 
     public function endWorkingDay($product_id, $master_id)
     {
-        Yii::warning('Master_2','endWorkingDay_Master_2');
+        Yii::warning('Master_2', 'endWorkingDay_Master_2');
         if ($product_id) {
             $component = new \wm\b24tools\b24Tools();
             $b24App = $component->connectFromAdmin();
@@ -652,13 +647,11 @@ class Master_2 extends Model
         if ($master_id) {
             $this->updateEntryToSpUchetRabochegoVremeny($master_id);
         }
-
-
     }
 
     public function returnProduct($product_id)
     {
-        Yii::warning('Master_2','returnProduct_Master_2');
+        Yii::warning('Master_2', 'returnProduct_Master_2');
 //        $usersId = Yii::$app->user->id;
 //        $masterId = $this->getMasterId($usersId);
 
@@ -704,7 +697,7 @@ class Master_2 extends Model
                 'fields' => [
                     'ufCrm8Master' => '',
                     'ufCrm8Status' => 896, // на складе
-//                    'stageId' => $previousStage // Перевод изделия на предыдущую стадию / на предыдущий участок
+                    'stageId' => $previousStage // Перевод изделия на предыдущую стадию / на предыдущий участок
                 ]
             ]
         );
@@ -729,12 +722,11 @@ class Master_2 extends Model
         return [
             'master_id' => $product['ufCrm8Master']
         ];
-
     }
 
     public function technologicalPauseStart($product_id)
     {
-        Yii::warning('Master_2','technologicalPauseStart_Master_2');
+        Yii::warning('Master_2', 'technologicalPauseStart_Master_2');
         $component = new \wm\b24tools\b24Tools();
         $b24App = $component->connectFromAdmin();
         $obB24 = new \Bitrix24\B24Object($b24App);
@@ -761,9 +753,9 @@ class Master_2 extends Model
                 'entityTypeId' => 187, //СП Производство
                 'id' => $product_id,
                 'fields' => [
-//                    'ufCrm8Master' => '',
+            //                    'ufCrm8Master' => '',
                     'ufCrm8Status' => 902, // технологическая пауза
-//                    'stageId' => $previousStage // Перевод изделия на предыдущую стадию / на предыдущий участок
+            //                    'stageId' => $previousStage // Перевод изделия на предыдущую стадию / на предыдущий участок
                 ]
             ]
         );
@@ -793,7 +785,7 @@ class Master_2 extends Model
 
     public function technologicalPauseEnd($product_id)
     {
-        Yii::warning('Master_2','technologicalPauseEnd_Master_2');
+        Yii::warning('Master_2', 'technologicalPauseEnd_Master_2');
         $component = new \wm\b24tools\b24Tools();
         $b24App = $component->connectFromAdmin();
         $obB24 = new \Bitrix24\B24Object($b24App);
@@ -820,9 +812,9 @@ class Master_2 extends Model
                 'entityTypeId' => 187, //СП Производство
                 'id' => $product_id,
                 'fields' => [
-//                    'ufCrm8Master' => '',
+            //                    'ufCrm8Master' => '',
                     'ufCrm8Status' => 898, // в работе
-//                    'stageId' => $previousStage // Перевод изделия на предыдущую стадию / на предыдущий участок
+            //                    'stageId' => $previousStage // Перевод изделия на предыдущую стадию / на предыдущий участок
                 ]
             ]
         );
@@ -853,7 +845,7 @@ class Master_2 extends Model
 
     public function done($product_id)
     {
-        Yii::warning('Master_2','done_Master_2');
+        Yii::warning('Master_2', 'done_Master_2');
         $component = new \wm\b24tools\b24Tools();
         $b24App = $component->connectFromAdmin();
         $obB24 = new \Bitrix24\B24Object($b24App);
@@ -881,7 +873,7 @@ class Master_2 extends Model
                 'fields' => [
                     'ufCrm8Master' => '',
                     'ufCrm8Status' => 896, // на складе
-//                    'stageId' => $nextStage // Перевод изделия на следующую стадию / на следующий участок
+                    'stageId' => $nextStage // Перевод изделия на следующую стадию / на следующий участок
                 ]
             ]
         );
@@ -906,12 +898,11 @@ class Master_2 extends Model
         return [
             'master_id' => $product['ufCrm8Master']
         ];
-
     }
 
     public function updateEntryToSpUchetRabochegoVremeny($masterId)
     {
-        Yii::warning('Master_2','updateEntryToSpUchetRabochegoVremeny_Master_2');
+        Yii::warning('Master_2', 'updateEntryToSpUchetRabochegoVremeny_Master_2');
         $date = date('Y-m-d');
         $time = date('H:i:s');
 
@@ -950,7 +941,7 @@ class Master_2 extends Model
 
     public function addEntryToSpUchetRabochegoVremeny($arrData)
     {
-        Yii::warning('Master_2','addEntryToSpUchetRabochegoVremeny_Master_2');
+        Yii::warning('Master_2', 'addEntryToSpUchetRabochegoVremeny_Master_2');
         $component = new \wm\b24tools\b24Tools();
         $b24App = $component->connectFromAdmin();
         $obB24 = new \Bitrix24\B24Object($b24App);
@@ -962,7 +953,7 @@ class Master_2 extends Model
                     'ufCrm18Master' => $arrData['masterId'],
                     'ufCrm18PrishelDate' => $arrData['date'],
                     'ufCrm18PrishelTime' => $arrData['time'],
-//                    'ufCrm18Uchastok' => $arrData['masterWorkshop'] // нужно переделывать тип поля в СП
+            //                    'ufCrm18Uchastok' => $arrData['masterWorkshop'] // нужно переделывать тип поля в СП
                 ]
             ]
         );
@@ -970,7 +961,7 @@ class Master_2 extends Model
 
     public function getArrProductFromSp($entityTypeId, $filter)
     {
-        Yii::warning('Master_2','getArrProductFromSp_Master_2');
+        Yii::warning('Master_2', 'getArrProductFromSp_Master_2');
         $component = new \wm\b24tools\b24Tools();
         $b24App = $component->connectFromAdmin();
         $obB24 = new \Bitrix24\B24Object($b24App);

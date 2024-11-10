@@ -29,13 +29,22 @@ class Master3 extends Model
      */
     public const ENTITY_TYPE_ID = 1036;
 
-    public $id;
-    public $ufCrm14Workshop; // участок
-    public $ufCrm14Status; // принят/уволен
+    /**
+     * @var int
+     */
+    public int $id;
+    /**
+     * @var int
+     */
+    public int $ufCrm14Workshop; // участок
+    /**
+     * @var int
+     */
+    public int $ufCrm14Status; // принят/уволен
 
     /**
-     * @param $usersId
-     * @return mixed
+     * @param int $usersId
+     * @return array<string, mixed>
      * @throws \Bitrix24\Exceptions\Bitrix24ApiException
      * @throws \Bitrix24\Exceptions\Bitrix24EmptyResponseException
      * @throws \Bitrix24\Exceptions\Bitrix24Exception
@@ -51,7 +60,7 @@ class Master3 extends Model
      * @throws \yii\base\Exception
      * @throws \yii\db\Exception
      */
-    public static function getMasterByUserId($usersId)
+    public static function getMasterByUserId(int $usersId): array
     {
         $component = new \wm\b24tools\b24Tools();
         $b24App = $component->connectFromAdmin();
@@ -65,5 +74,4 @@ class Master3 extends Model
         );
         return $answerB24['result']['items'][0];
     }
-
 }

@@ -19,7 +19,7 @@ $this->title = 'My Yii Application';
         <div class="col-md-3">
             <div class="d-grid gap-2">
 
-                <a class="btn btn-primary" href="https://test.mysmartautomation.ru/productManagement/product/end-pause?product_id=<?php echo $product_id; ?>"
+                <a class="btn btn-primary" href="https://sof.lavsit.ru/productManagement/product/end-pause?product_id=<?php echo $product_id; ?>"
                    role="button">Продолжить</a>
 
 <!--                <input type="button" value="Продолжить"-->

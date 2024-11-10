@@ -14,7 +14,6 @@ use app\models\ContactForm;
 
 class SiteController extends Controller
 {
-
     /**
      * @return mixed[]
      */
@@ -75,7 +74,8 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        if (\Yii::$app->getUser()->isGuest
+        if (
+            \Yii::$app->getUser()->isGuest
         ) {
             \Yii::$app->getResponse()->redirect(\Yii::$app->getUser()->loginUrl);
         } else {
@@ -178,6 +178,9 @@ class SiteController extends Controller
     }
     */
 
+    /**
+     * @return string
+     */
     public function actionStart2()
     {
         return $this->render('start2');

@@ -24,5 +24,4 @@ use Yii;
  */
 class Workplace extends Model
 {
-
 }

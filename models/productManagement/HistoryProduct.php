@@ -9,17 +9,17 @@ use Yii;
 // Изделие
 
 /**
- * @property int historyPriorityId
+ * @property int $historyPriorityId
  */
 class HistoryProduct extends Model
 {
     /**
-     *
+     * @var int
      */
     public const ENTITY_TYPE_ID = 1042;
 
     /**
-     *
+     * @var array<int, int>
      */
     public const PRIORITY_HISTORY_PRODUCT = [
         874 => 754,
@@ -27,36 +27,36 @@ class HistoryProduct extends Model
         878 => 766
     ];
     /**
-     * @var
+     * @var int
      */
-    public $id;
+    public int $id;
     /**
-     * @var
+     * @var int
      */
-    public $masterId;
+    public int $masterId;
     /**
-     * @var
+     * @var int
      */
-    public $statusId;
+    public int $statusId;
     /**
-     * @var
+     * @var string
      */
-    public $priorityId;
+    public string $priorityId;
     /**
-     * @var
+     * @var int
      */
-    public $productId;
+    public int $productId;
     /**
-     * @var
+     * @var int
      */
-//    public $parentId187;
+//    public int $parentId187;
     /**
-     * @var
+     * @var string
      */
-    public $operationId;
+    public string $operationId;
 
     /**
-     * @param $id
+     * @param int $id
      * @return HistoryProduct
      * @throws \Bitrix24\Exceptions\Bitrix24ApiException
      * @throws \Bitrix24\Exceptions\Bitrix24EmptyResponseException
@@ -73,7 +73,7 @@ class HistoryProduct extends Model
      * @throws \yii\base\Exception
      * @throws \yii\db\Exception
      */
-    public static function get($id)
+    public static function get(int $id): HistoryProduct
     {
         $component = new \wm\b24tools\b24Tools();
         $b24App = $component->connectFromAdmin();
@@ -89,8 +89,8 @@ class HistoryProduct extends Model
     }
 
     /**
-     * @param $filter
-     * @param $order
+     * @param array<string, mixed> $filter
+     * @param array<string, mixed> $order
      * @return HistoryProduct[]
      * @throws \Bitrix24\Exceptions\Bitrix24ApiException
      * @throws \Bitrix24\Exceptions\Bitrix24EmptyResponseException
@@ -107,7 +107,7 @@ class HistoryProduct extends Model
      * @throws \yii\base\Exception
      * @throws \yii\db\Exception
      */
-    public static function list($filter = [], $order = [])
+    public static function list(array $filter = [], array $order = []): array
     {
         $component = new \wm\b24tools\b24Tools();
         $b24App = $component->connectFromAdmin();
@@ -128,11 +128,11 @@ class HistoryProduct extends Model
     }
 
     /**
-     * @param $id
-     * @param $fields
+     * @param int $id
+     * @param array<string, mixed> $fields
      * @return void
      */
-    public static function update($id, $fields)
+    public static function update(int $id, array $fields)
     {
         $component = new \wm\b24tools\b24Tools();
         $b24App = $component->connectFromAdmin();
@@ -148,7 +148,7 @@ class HistoryProduct extends Model
     }
 
     /**
-     * @param $fields
+     * @param array<string,mixed> $fields
      * @return void
      * @throws \Bitrix24\Exceptions\Bitrix24ApiException
      * @throws \Bitrix24\Exceptions\Bitrix24EmptyResponseException
@@ -165,7 +165,7 @@ class HistoryProduct extends Model
      * @throws \yii\base\Exception
      * @throws \yii\db\Exception
      */
-    public static function add($fields)
+    public static function add(array $fields)
     {
         $component = new \wm\b24tools\b24Tools();
         $b24App = $component->connectFromAdmin();
@@ -180,11 +180,11 @@ class HistoryProduct extends Model
     }
 
     /**
-     * @param $arr
+     * @param array<string,mixed> $arr
      * @return HistoryProduct
      * @throws \Exception
      */
-    private static function b24ToObject($arr)
+    private static function b24ToObject(array $arr): HistoryProduct
     {
         $model = new HistoryProduct();
         $model->id = ArrayHelper::getValue($arr, 'id');
@@ -196,10 +196,12 @@ class HistoryProduct extends Model
         return $model;
     }
 
+
     /**
      * @param $model
      * @return array
      */
+    /*
     private function objectToB24($model)
     {
         $arr = [
@@ -212,11 +214,12 @@ class HistoryProduct extends Model
         ];
         return $arr;
     }
+    */
 
     /**
      * @return int
      */
-    public function getProductPriorityId()
+    public function getProductPriorityId(): int
     {
         return ArrayHelper::getValue(self::PRIORITY_HISTORY_PRODUCT, $this->priorityId);
     }
@@ -226,11 +229,10 @@ class HistoryProduct extends Model
      */
     public static function addEntryToHistory()
     {
-
     }
 
     /**
-     * @param $product
+     * @param HistoryProduct $product
      * @return mixed
      * @throws \Bitrix24\Exceptions\Bitrix24ApiException
      * @throws \Bitrix24\Exceptions\Bitrix24EmptyResponseException
@@ -247,7 +249,7 @@ class HistoryProduct extends Model
      * @throws \yii\base\Exception
      * @throws \yii\db\Exception
      */
-    public static function getLatestProductHistory($product)
+    public static function getLatestProductHistory(HistoryProduct $product)
     {
         $component = new \wm\b24tools\b24Tools();
         $b24App = $component->connectFromAdmin();
@@ -262,5 +264,4 @@ class HistoryProduct extends Model
         )['result']['items'][0];
         return $request;
     }
-
 }

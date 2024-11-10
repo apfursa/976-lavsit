@@ -11,9 +11,11 @@ use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
 
+/**
+ *
+ */
 class MasterController extends Controller
 {
-
     /**
      * @return mixed[]
      */
@@ -111,6 +113,9 @@ class MasterController extends Controller
         return $this->goHome();
     }
 
+    /**
+     * @return string|void
+     */
     public function actionIndex()
     {
         $usersId = Yii::$app->user->id;
@@ -144,14 +149,16 @@ class MasterController extends Controller
             return $this->render('start3');
         }
         if ($arrData['page'] == 'continue') {
-            return $this->render('continue',
+            return $this->render(
+                'continue',
                 [
                     'master_id' => $arrData['master_id'],
                 ]
             );
         }
         if ($arrData['page'] == 9) {
-            return $this->render('page9',
+            return $this->render(
+                'page9',
                 [
                     'master_id' => $arrData['master_id'],
                 ]
@@ -162,6 +169,11 @@ class MasterController extends Controller
         }
     }
 
+    /**
+     * @param $product_id
+     * @param $master_id
+     * @return Response
+     */
     public function actionEndWorkingDay($product_id = null, $master_id = null)
     {
         $model = new Master();
@@ -170,11 +182,16 @@ class MasterController extends Controller
         return $this->goHome();
     }
 
+    /**
+     * @param $product_id
+     * @return string
+     */
     public function actionReturnProduct($product_id)
     {
         $model = new Master();
         $arrData = $model->returnProduct($product_id);
-        return $this->render('start1',
+        return $this->render(
+            'start1',
             [
                 'master_id' => $arrData['master_id'],
             ]
@@ -189,11 +206,16 @@ class MasterController extends Controller
 //        return $this->goHome();
     }
 
+    /**
+     * @param $product_id
+     * @return string
+     */
     public function actionTechnologicalPauseStart($product_id)
     {
         $model = new Master();
         $arrData = $model->technologicalPauseStart($product_id);
-        return $this->render('technologicalPause',
+        return $this->render(
+            'technologicalPause',
             [
                 'product_name' => $arrData['product_name'],
                 'product_id' => $arrData['product_id'],
@@ -201,11 +223,16 @@ class MasterController extends Controller
         );
     }
 
+    /**
+     * @param $product_id
+     * @return string
+     */
     public function actionTechnologicalPauseEnd($product_id)
     {
         $model = new Master();
         $arrData = $model->technologicalPauseEnd($product_id);
-        return $this->render('start2',
+        return $this->render(
+            'start2',
             [
                 'product_name' => $arrData['product_name'],
                 'product_id' => $arrData['product_id'],
@@ -213,17 +240,40 @@ class MasterController extends Controller
         );
     }
 
+    /**
+     * @param $product_id
+     * @return string
+     */
     public function actionDone($product_id)
     {
         $model = new Master();
         $arrData = $model->done($product_id);
-        return $this->render('start1',
+        return $this->render(
+            'start1',
             [
                 'master_id' => $arrData['master_id'],
             ]
         );
     }
 
+    /**
+     * @param $usersId
+     * @return mixed
+     * @throws \Bitrix24\Exceptions\Bitrix24ApiException
+     * @throws \Bitrix24\Exceptions\Bitrix24EmptyResponseException
+     * @throws \Bitrix24\Exceptions\Bitrix24Exception
+     * @throws \Bitrix24\Exceptions\Bitrix24IoException
+     * @throws \Bitrix24\Exceptions\Bitrix24MethodNotFoundException
+     * @throws \Bitrix24\Exceptions\Bitrix24PaymentRequiredException
+     * @throws \Bitrix24\Exceptions\Bitrix24PortalDeletedException
+     * @throws \Bitrix24\Exceptions\Bitrix24PortalRenamedException
+     * @throws \Bitrix24\Exceptions\Bitrix24SecurityException
+     * @throws \Bitrix24\Exceptions\Bitrix24TokenIsExpiredException
+     * @throws \Bitrix24\Exceptions\Bitrix24TokenIsInvalidException
+     * @throws \Bitrix24\Exceptions\Bitrix24WrongClientException
+     * @throws \yii\base\Exception
+     * @throws \yii\db\Exception
+     */
     public function getMasterByUserId($usersId)
     {
         $component = new \wm\b24tools\b24Tools();

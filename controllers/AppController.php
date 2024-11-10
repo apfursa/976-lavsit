@@ -57,7 +57,7 @@ class AppController extends Controller
             }
 
             $b24App = $component24->connectFromUser($arAccessParams);
-            if(!$b24App){
+            if (!$b24App) {
                 throw new HttpException(403, 'В доступе отказано');
             }
             $obB24 = new B24User($b24App);
@@ -75,13 +75,13 @@ class AppController extends Controller
 
                 $user->password = \Yii::$app->security->generatePasswordHash($userPassword);
                 $user->getAccessToken();
-                $user->b24AccessParams = json_encode($arAccessParams)?:'';
+                $user->b24AccessParams = json_encode($arAccessParams) ?: '';
                 $user->save();
                 Yii::warning($user->errors, '$user->errors1');
             } else {
                 //Yii::warning('$user2', '$user2');
                 $user->getAccessToken();
-                $user->b24AccessParams = json_encode($arAccessParams)?:'';
+                $user->b24AccessParams = json_encode($arAccessParams) ?: '';
                 //$user->generateAccessTokenTest();
                 $user->save();
                 //Yii::warning($user->errors, '$user->errors');

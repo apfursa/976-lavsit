@@ -15,7 +15,7 @@ $this->title = 'My Yii Application';
             <div class="t1">
                 <p>Предыдущий рабочий день завершился автоматически. Пожалуйста, установите актуальную дату и время завершения предыдущего рабочего дня.</p>
             </div>
-            <form action="https://test.mysmartautomation.ru/productManagement/working-hours/change-time" method="post">
+            <form action="https://sof.lavsit.ru/productManagement/working-hours/change-time" method="post">
                 <input type="date" id="date" name="date" size="1">
                 <input type="time" id="time" name="time" size="1"><br><br>
                 <input type="hidden" name="master_id" value="<?php echo $master_id ?>">

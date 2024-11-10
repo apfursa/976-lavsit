@@ -7,7 +7,20 @@ use app\models\productManagement\Master3;
 use app\models\productManagement\Product;
 use app\models\productManagement\WorkingHours;
 use app\models\productManagement\Workplace;
+use Bitrix24\Exceptions\Bitrix24ApiException;
+use Bitrix24\Exceptions\Bitrix24EmptyResponseException;
+use Bitrix24\Exceptions\Bitrix24Exception;
+use Bitrix24\Exceptions\Bitrix24IoException;
+use Bitrix24\Exceptions\Bitrix24MethodNotFoundException;
+use Bitrix24\Exceptions\Bitrix24PaymentRequiredException;
+use Bitrix24\Exceptions\Bitrix24PortalDeletedException;
+use Bitrix24\Exceptions\Bitrix24PortalRenamedException;
+use Bitrix24\Exceptions\Bitrix24SecurityException;
+use Bitrix24\Exceptions\Bitrix24TokenIsExpiredException;
+use Bitrix24\Exceptions\Bitrix24TokenIsInvalidException;
+use Bitrix24\Exceptions\Bitrix24WrongClientException;
 use Yii;
+use yii\base\Exception;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
 use yii\web\Controller;
@@ -17,13 +30,16 @@ use app\models\LoginForm;
 use app\models\ContactForm;
 
 // Рабочее место сотрудника
+
+/**
+ *
+ */
 class ProductController extends Controller
 {
-
     /**
-     * @return mixed[]
+     * @return array<string, mixed>
      */
-    public function behaviors()
+    public function behaviors():array
     {
         return [
             'access' => [
@@ -72,9 +88,9 @@ class ProductController extends Controller
     }
 
     /**
-     * @return mixed[]
+     * @return array<string, mixed>
      */
-    public function actions()
+    public function actions():array
     {
         return [
             'error' => [
@@ -114,7 +130,7 @@ class ProductController extends Controller
      *
      * @return Response
      */
-    public function actionLogout()
+    public function actionLogout(): Response
     {
         Yii::$app->user->logout();
 
@@ -140,7 +156,25 @@ class ProductController extends Controller
     }
     */
 
-    public function actionDone($product_id)
+    /**
+     * @param int $product_id
+     * @return string
+     * @throws Bitrix24ApiException
+     * @throws Bitrix24EmptyResponseException
+     * @throws Bitrix24Exception
+     * @throws Bitrix24IoException
+     * @throws Bitrix24MethodNotFoundException
+     * @throws Bitrix24PaymentRequiredException
+     * @throws Bitrix24PortalDeletedException
+     * @throws Bitrix24PortalRenamedException
+     * @throws Bitrix24SecurityException
+     * @throws Bitrix24TokenIsExpiredException
+     * @throws Bitrix24TokenIsInvalidException
+     * @throws Bitrix24WrongClientException
+     * @throws Exception
+     * @throws \yii\db\Exception
+     */
+    public function actionDone(int $product_id): string
     {
         $usersId = Yii::$app->user->id;
         $master = Master3::getMasterByUserId($usersId);
@@ -153,7 +187,25 @@ class ProductController extends Controller
         );
     }
 
-    public function actionReturnProduct($product_id)
+    /**
+     * @param int $product_id
+     * @return string
+     * @throws Bitrix24ApiException
+     * @throws Bitrix24EmptyResponseException
+     * @throws Bitrix24Exception
+     * @throws Bitrix24IoException
+     * @throws Bitrix24MethodNotFoundException
+     * @throws Bitrix24PaymentRequiredException
+     * @throws Bitrix24PortalDeletedException
+     * @throws Bitrix24PortalRenamedException
+     * @throws Bitrix24SecurityException
+     * @throws Bitrix24TokenIsExpiredException
+     * @throws Bitrix24TokenIsInvalidException
+     * @throws Bitrix24WrongClientException
+     * @throws Exception
+     * @throws \yii\db\Exception
+     */
+    public function actionReturnProduct(int $product_id): string
     {
         $usersId = Yii::$app->user->id;
         $master = Master3::getMasterByUserId($usersId);
@@ -166,11 +218,30 @@ class ProductController extends Controller
         );
     }
 
-    public function actionStartTechnologicalPause($product_id)
+    /**
+     * @param int $product_id
+     * @return string
+     */
+    public function actionStartTechnologicalPause(int $product_id): string
     {
 //        $usersId = Yii::$app->user->id;
 //        $master = Master3::getMasterByUserId($usersId);
-        $product = Product::startTechnologicalPause($product_id);
+        try {
+            $product = Product::startTechnologicalPause($product_id);
+        } catch (Bitrix24MethodNotFoundException|
+        Bitrix24PaymentRequiredException|
+        Bitrix24PortalDeletedException|
+        Bitrix24PortalRenamedException|
+        Bitrix24TokenIsExpiredException|
+        Bitrix24TokenIsInvalidException|
+        Bitrix24WrongClientException|
+        Bitrix24ApiException|
+        Bitrix24EmptyResponseException|
+        Bitrix24IoException|
+        Bitrix24SecurityException|
+        Bitrix24Exception|
+        \yii\db\Exception|Exception $e) {
+        }
         return $this->render(
             'technologicalPause',
             [
@@ -180,21 +251,31 @@ class ProductController extends Controller
         );
     }
 
-    public function actionEndTechnologicalPause($product_id)
+    /**
+     * @param int $product_id
+     * @return string
+     */
+    public function actionEndTechnologicalPause(int $product_id): string
     {
         $product = Product::endTechnologicalPause($product_id);
+        $deadline = date('d-m-Y', strtotime($product->deadline));
         return $this->render(
             'main',
             [
                 'product_name' => $product->title,
                 'product_id' => $product->id,
-                'link' => $product->link
-//                    'master_id' => $product->masterId
+                'link' => $product->link,
+                'deadline' => $deadline
+            //                    'master_id' => $product->masterId
             ]
         );
 //        Yii::$app->response->redirect('https://test.mysmartautomation.ru/productManagement/workplace/start');
     }
 
+    /**
+     * @param $product_id
+     * @return string
+     */
     public function actionStartPause($product_id)
     {
 //        $usersId = Yii::$app->user->id;
@@ -209,19 +290,24 @@ class ProductController extends Controller
         );
     }
 
+    /**
+     * @param $product_id
+     * @return string
+     */
     public function actionEndPause($product_id)
     {
         $product = Product::endPause($product_id);
+        $deadline = date('d-m-Y', strtotime($product->deadline));
         return $this->render(
             'main',
             [
                 'product_name' => $product->title,
                 'product_id' => $product->id,
-                'link' => $product->link
-//                    'master_id' => $product->masterId
+                'link' => $product->link,
+                'deadline' => $deadline
+            //                    'master_id' => $product->masterId
             ]
         );
 //        Yii::$app->response->redirect('https://test.mysmartautomation.ru/productManagement/workplace/render-main');
     }
-
 }

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace app\controllers\test;
 
 use yii\rest\Controller;
@@ -23,9 +22,9 @@ class TelegramController extends Controller
                 $token = "5933088889:AAHuoHF_wIf69ucFY3asnIi90pPbIJt6NLk";
 
                 $getQuery = [
-        //            "chat_id" 	 => 5222961062,
-                    "chat_id" 	 => -805422996,
-                    "text"  	 => "Новое сообщение\n из <b>формы</b>",
+        //            "chat_id"      => 5222961062,
+                    "chat_id"    => -805422996,
+                    "text"       => "Новое сообщение\n из <b>формы</b>",
                     "parse_mode" => "html"
                 ];
                 $ch = curl_init("https://api.telegram.org/bot". $token ."/sendMessage?" . http_build_query($getQuery));
@@ -36,7 +35,6 @@ class TelegramController extends Controller
 
                 return json_decode($resultQuery);
         */
-
     }
 
     public function actionTableBotNext()
@@ -48,7 +46,7 @@ class TelegramController extends Controller
             "/bitrix/components/bitrix/crm.lead.show/show_file.php?auth=2b71ad630000071b005767400000001800000730d6aff0fdd3a9e9c09af5a5ee209fcc&ownerId=248&fieldName=UF_CRM_1646027703197&dynamic=Y&fileId=8262";
         $arrayQuery = [
 //            'chat_id'    => 5222961062,
-            "chat_id" 	 => '-' . $chatId, //
+            "chat_id"    => '-' . $chatId, //
             'caption' => 'Проверка работы',
 //            'photo' => curl_file_create(__DIR__ . '/irish33.jpg', 'image/jpg' , 'irish33.jpg')
 //            'photo' => curl_file_create('../web/photo/irish33.jpg')//, 'image/jpg', 'irish33.jpg'
@@ -89,9 +87,9 @@ class TelegramController extends Controller
                 $token = "5933088889:AAHuoHF_wIf69ucFY3asnIi90pPbIJt6NLk";
 
                 $getQuery = [
-        //            "chat_id" 	 => 5222961062,
-                    "chat_id" 	 => -805422996,
-                    "text"  	 => "Новое сообщение\n из <b>формы</b>",
+        //            "chat_id"      => 5222961062,
+                    "chat_id"    => -805422996,
+                    "text"       => "Новое сообщение\n из <b>формы</b>",
                     "parse_mode" => "html"
                 ];
                 $ch = curl_init("https://api.telegram.org/bot". $token ."/sendMessage?" . http_build_query($getQuery));
@@ -102,8 +100,5 @@ class TelegramController extends Controller
 
                 return json_decode($resultQuery);
         */
-
     }
-
-
 }

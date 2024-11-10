@@ -6,7 +6,8 @@ use Yii;
 
 class StatusController extends \wm\admin\controllers\RestController
 {
-    public function actionCrm_status_list(){
+    public function actionCrm_status_list()
+    {
         $component = new \wm\b24tools\b24Tools();
         $b24App = $component->connectFromAdmin();
         $obB24 = new \Bitrix24\B24Object($b24App);
@@ -20,8 +21,4 @@ class StatusController extends \wm\admin\controllers\RestController
         );
         return $request;
     }
-
-
 }
-
-
