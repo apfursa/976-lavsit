@@ -33,34 +33,34 @@ class WorkingHours extends Model
     /**
      * @var int
      */
-    public int $id;
+    public ?int $id;
 
     /**
      * @var int
      */
-    public int $masterId;
+    public string $masterId;
 
     /**
      * @var string
      */
-    public string $dateStart;
+    public ?string $dateStart;
 
     /**
      * @var string
      */
-    public string $timeStart;
+    public ?string $timeStart;
     /**
      * @var string
      */
-    public string $dateEnd;
+    public ?string $dateEnd;
     /**
      * @var string
      */
-    public string $timeEnd;
+    public ?string $timeEnd;
     /**
      * @var string
      */
-    public string $typeOfCompletion;
+    public ?string $typeOfCompletion;
 
     /**
      * @param $id int
@@ -128,6 +128,7 @@ class WorkingHours extends Model
             ]
         )['result']['items'];
         $arr = [];
+        Yii::warning(ArrayHelper::toArray($request), 'WorkingHours_131');
         foreach ($request as $item) {
             $arr[] = self::b24ToObject($item);
         }
