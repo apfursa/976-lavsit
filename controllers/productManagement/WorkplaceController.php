@@ -134,10 +134,12 @@ class WorkplaceController extends Controller
     {
         $usersId = Yii::$app->user->id;
         $master = Master3::getMasterByUserId($usersId);
+        Yii::warning(ArrayHelper::toArray($master), 'WorkplaceController_137');
         $typeOfCompletion = WorkingHours::howWorkingDayCompleted($master);
         if ($typeOfCompletion == 'completed automatically') {
             Yii::$app->response->redirect('https://sof.lavsit.ru/productManagement/working-hours/change-end-time-of-working-day');
         }
+        Yii::warning($typeOfCompletion, 'WorkplaceController_$typeOfCompletion_142');
         if ($typeOfCompletion == 'no entry' || $typeOfCompletion == 'completed by the user' || $typeOfCompletion == 'fixed by user') {
             WorkingHours::add($master);
             $orderHistoryProduct = ['id' => 'DESC']; // В порядке убывания
