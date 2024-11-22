@@ -30,7 +30,7 @@ class Product extends Model
     /**
      * @var int
      */
-    public const ENTITY_TYPE_ID = 187;
+    public const ENTITY_TYPE_ID = 187; // СП "Производство София"
 
     /**
      * @var array<int, int>
@@ -43,36 +43,36 @@ class Product extends Model
     /**
      * @var int
      */
-    public int $id;
+    public ?int $id;
     /**
      * @var string
      */
-    public string $title;
+    public ?string $title;
     /**
      * @var string
      */
-    public string $stageId;
-    /**
-     * @var int
-     */
-    public int $masterId;
+    public ?string $stageId;
     /**
      * @var string
      */
-    public string $statusId;
+    public ?string $masterId;
     /**
      * @var string
      */
-    public string $priorityId;
+    public ?string $statusId;
     /**
      * @var string
      */
-    public string $deadline;
+    public ?string $priorityId;
+    /**
+     * @var string
+     */
+    public ?string $deadline;
 
     /**
      * @var string
      */
-    public string $link;
+    public ?string $link;
 
     /**
      * @param int $id
@@ -141,6 +141,7 @@ class Product extends Model
             ]
         )['result']['items'];
         $arr = [];
+        Yii::warning(ArrayHelper::toArray($request), 'Product_144');
         foreach ($request as $item) {
             $arr[] = self::b24ToObject($item);
         }
@@ -209,7 +210,7 @@ class Product extends Model
     /**
      * @return int
      */
-    public function getHistoryPriorityId(): int
+    public function getHistoryPriorityId(): ?int
     {
         return ArrayHelper::getValue(self::PRIORITY_PRODUCT_HISTORY, $this->priorityId);
     }
